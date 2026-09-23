@@ -575,6 +575,7 @@
 
   <!-- ============ 会計 ============ -->
   <section class="panel" id="p-money" role="tabpanel" aria-labelledby="tab-money" hidden>
+    <p class="hint" style="margin-bottom:0"><b>先に「参加」タブでその場にいる人を登録してください。</b>1次会のトグルがオンの人が割り勘の対象になります。</p>
     <h2 class="sec"><span class="n">01</span>1次会の総額</h2>
     <p class="hint">会計時に、<b>伝票の合計金額だけ</b>入れてください。あとは人数で割ります。</p>
     <div class="totalin">
@@ -1129,7 +1130,7 @@
     document.getElementById("per-cap").textContent = c.units > 0
       ? "通常区分ひとりあたり（" + state.billing.roundUnit + "円" +
         ({up:"切り上げ",near:"四捨五入",down:"切り捨て"}[state.billing.roundMode]) + "）"
-      : "1次会の参加者を選んでください";
+      : "「参加」タブで1次会に出る人のトグルをオンにしてください";
     document.getElementById("m-total").textContent = yen(c.total);
     document.getElementById("m-heads").textContent = c.heads;
     document.getElementById("m-units").textContent = (Math.round(c.units*10)/10);
@@ -1163,7 +1164,7 @@
       td.appendChild(b); tr.appendChild(td); body.appendChild(tr);
     });
     if(c.rows.length === 0){
-      var tr0 = el("tr"), td0 = el("td",null,"1次会の参加者がまだ選ばれていません");
+      var tr0 = el("tr"), td0 = el("td",null,"「参加」タブで参加者を登録し、1次会のトグルをオンにしてください");
       td0.colSpan = 4; td0.style.color = "var(--ink-3)";
       tr0.appendChild(td0); body.appendChild(tr0);
     }
@@ -1421,8 +1422,8 @@
   /* ========== タブ ========== */
   var TABS = [["tab-info","p-info"],["tab-prep","p-prep"],["tab-people","p-people"],["tab-money","p-money"],["tab-venue","p-venue"]];
   // Artifact版は全タブ。公開ページは概要のみ表示し、合言葉の内側は会計だけ。
-  var STAFF  = IS_ARTIFACT ? [] : ["tab-money"];
-  var HIDDEN = IS_ARTIFACT ? [] : ["tab-prep","tab-people","tab-venue"];
+  var STAFF  = IS_ARTIFACT ? [] : ["tab-people","tab-money"];
+  var HIDDEN = IS_ARTIFACT ? [] : ["tab-prep","tab-venue"];
   var SKEY = LSKEY + "staff";
   function staffOn(){
     if(IS_ARTIFACT) return true;                 // Artifact版は幹事しか開けないので常に全部出す
@@ -1438,7 +1439,7 @@
     btn.hidden = IS_ARTIFACT;
     btn.textContent = on ? "会計 ON" : "会計（幹事用）";
     btn.setAttribute("aria-pressed", on ? "true" : "false");
-    btn.title = on ? "会計タブを隠す" : "当日の会計計算を開く（幹事用）";
+    btn.title = on ? "参加・会計タブを隠す" : "参加者の選択と割り勘計算を開く（幹事用）";
     if(!on){
       var cur = TABS.filter(function(t){ return document.getElementById(t[0]).getAttribute("aria-selected") === "true"; })[0];
       if(cur && STAFF.indexOf(cur[0]) >= 0) showTab("tab-info");
