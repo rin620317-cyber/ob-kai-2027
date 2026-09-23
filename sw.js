@@ -1,6 +1,6 @@
 // テニス部同窓会ページのオフライン対応。
 // 本文は「通信優先・失敗したらキャッシュ」。古い内容を掴んだまま動かないようにする。
-const CACHE = 'obkai-20260923185404';
+const CACHE = 'obkai-20260923185441';
 const SHELL = ['./', './index.html', './manifest.webmanifest',
                './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
