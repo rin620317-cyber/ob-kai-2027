@@ -1037,6 +1037,18 @@
   });
 
   /* ========== お金 ========== */
+  document.getElementById("total").oninput = function(){
+    var v = this.value.trim();
+    state.billing.total = v === "" ? null : Number(v);
+    save("billing"); renderMoney();
+  };
+  document.getElementById("roundunit").onchange = function(){
+    state.billing.roundUnit = Number(this.value); save("billing"); renderMoney();
+  };
+  document.getElementById("roundmode").onchange = function(){
+    state.billing.roundMode = this.value; save("billing"); renderMoney();
+  };
+
   function stepper(host, label, sub, get, set, maxGet){
     var row = el("div","crow");
     var lab = el("div","lab");
