@@ -351,6 +351,19 @@
   table.collect tr.paid td.nm{text-decoration:line-through}
   table.collect tfoot td{font-weight:700;border-bottom:0;padding-top:10px}
 
+  /* ---------- 集金の照合 ---------- */
+  .cstat{border-radius:12px;padding:14px 16px;margin-top:6px;border:1px solid var(--line);background:var(--surface)}
+  .cstat.warn{border-color:var(--warn);background:var(--warn-soft)}
+  .cstat.done{border-color:var(--accent);background:var(--accent-soft)}
+  .cstat .big{font-family:"Roboto Mono",monospace;font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+  .cstat.warn .big{color:var(--warn)}
+  .cstat.done .big{color:var(--accent)}
+  .cstat .names{font-size:12.5px;color:var(--ink-2);margin-top:6px;line-height:1.7}
+  .cstat .names b{color:var(--ink)}
+  .cstat .eq{font-family:"Roboto Mono",monospace;font-size:12px;color:var(--ink-2);
+        margin-top:10px;padding-top:10px;border-top:1px dashed var(--line-strong);font-variant-numeric:tabular-nums}
+  .cstat .eq.bad{color:var(--alert);font-weight:700}
+
   /* ---------- venues ---------- */
   .vcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:10px}
   .vcard.hero2{border-color:var(--accent);background:var(--accent-soft)}
@@ -459,7 +472,7 @@
       <dt>日時</dt><dd>2027年1月3日（日）12:00 〜 18:00</dd>
       <dt>会場</dt><dd>どんがめ 西宮北口店<br>西宮市高松町11-10（阪急 西宮北口駅すぐ）</dd>
       <dt>受付</dt><dd>お店で「<b>りん で予約です</b>」とお伝えください。時間になったら直接お越しください</dd>
-      <dt>会費</dt><dd>当日の伝票を人数で割ります<br>幹事への精算は <b>PayPay・楽天ペイ・au PAY をおすすめします</b>（現金も可）</dd>
+      <dt>会費</dt><dd>当日の伝票を人数で割ります。<b>女性は6割の金額です</b><br>幹事への精算は <b>PayPay・楽天ペイ・au PAY をおすすめします</b>（現金も可）</dd>
       <dt>2次会</dt><dd>15:00頃に移るかもしれません（調整中）</dd>
     </dl>
     <div class="links" style="margin-top:10px">
@@ -493,7 +506,7 @@
           <li>20名で予約済</li>
           <li>18:00 解散</li>
           <li>飲み放題はなし（すべて単品）</li>
-          <li>会費は当日の割り勘</li>
+          <li>会費は当日の割り勘（<b>女性は6割</b>）</li>
           <li>精算はキャッシュレス推奨（現金も可）</li>
         </ul>
       </div>
@@ -597,7 +610,12 @@
     </div>
 
     <h2 class="sec"><span class="n">03</span>集金チェック</h2>
-    <p class="hint">受け取った人をタップして消し込み。残り人数と残額が下に出ます。</p>
+    <p class="hint">受け取った人をタップして消し込み。<b>その場にいる人数と「集金対象」の人数が一致しているか</b>を先に確かめてください。ここがずれていると請求漏れになります。</p>
+    <div id="collectstatus"></div>
+    <div class="opts" style="margin-top:10px">
+      <button class="btn sub" type="button" id="onlyunpaid">未回収だけ表示</button>
+      <span class="hint" style="margin:0" id="collectcount">—</span>
+    </div>
     <div class="tscroll">
       <table class="collect">
         <thead><tr><th>名前</th><th>区分</th><th class="r">金額</th><th class="r">受領</th></tr></thead>
@@ -696,6 +714,7 @@
   var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd43GxbaYE13dKjabkTrbK3EUhx9nyrA04jtPkzsY5QS_LDkw/viewform";
 
   var LOG = [
+    {d:"2026.09.23", m:"女性の会費を6割に決定。当日の空気で決めずに済むよう先に明記。"},
     {d:"2026.09.23", m:"精算はキャッシュレスを推奨に変更。幹事が多額の現金を持つ状態を避けるため。"},
     {d:"2026.09.23", m:"出欠フォームを公開。ページ冒頭から直接回答できます。"},
     {d:"2026.09.23", m:"幹事への精算方法を拡大。現金に加えて PayPay・楽天ペイ・au PAY でも受け付ける。なおお店側のQR決済はPayPayのみ（掲載情報）。"},
@@ -722,7 +741,8 @@
      note:"評価4.8・日本酒充実。お座敷は10名まで"}
   ];
   var CHECK_LABELS = {jan3:"1/3営業", enter:"移動時刻に入店可", out:"解散時刻までOK", seats:"人数分の席"};
-  var RATES = {full:{label:"通常", w:1}, p70:{label:"7割", w:0.7}, half:{label:"半額", w:0.5}, free:{label:"招待", w:0}};
+  var RATES = {full:{label:"通常", w:1}, p60:{label:"6割（女性）", w:0.6}, half:{label:"半額", w:0.5}, free:{label:"招待", w:0}};
+  function rateOf(p){ return RATES[p.rate] || RATES.full; }
 
   var TASKS = [
     {ph:"11月", id:"t01", t:"どんがめ：1/3の営業有無と営業時間"},
@@ -740,7 +760,7 @@
     {ph:"12月下旬", id:"t16", t:"2次会の要否と店を確定"},
     {ph:"当日まで", id:"t17", t:"1/2 前日リマインドを送る"},
     {ph:"当日まで", id:"t21", t:"PayPay・楽天ペイ・au PAY の受取QRをすぐ出せるようにする", s:"会計時に探すと列ができる。ホーム画面に並べておく"},
-    {ph:"12月下旬", id:"t23", t:"飲まない人の人数を確認して負担区分を決める", s:"フォームの「お酒」の回答を見る。やるなら会計前に宣言"},
+    {ph:"12月下旬", id:"t23", t:"負担区分を確定する", s:"女性は6割で確定。飲まない人への配慮は重ねず、減額はどちらか片方だけ適用する"},
     {ph:"当日まで", id:"t18", t:"1/3 11:45 現地集合・席の確認"},
     {ph:"当日まで", id:"t19", t:"1/3 14:45 会計・集金"}
   ];
@@ -844,10 +864,10 @@
   }
   function compute(){
     var total = billTotal(), list = attendees();
-    var units = list.reduce(function(a,p){ return a + RATES[p.rate].w; }, 0);
+    var units = list.reduce(function(a,p){ return a + rateOf(p).w; }, 0);
     var perUnit = units > 0 ? total/units : 0;
     var rows = list.map(function(p){
-      return {p:p, amount: RATES[p.rate].w === 0 ? 0 : roundTo(perUnit*RATES[p.rate].w, Number(state.billing.roundUnit), state.billing.roundMode)};
+      return {p:p, amount: rateOf(p).w === 0 ? 0 : roundTo(perUnit*rateOf(p).w, Number(state.billing.roundUnit), state.billing.roundMode)};
     });
     var collect = rows.reduce(function(a,r){ return a + r.amount; },0);
     return {total:total, heads:list.length, units:units,
@@ -1094,6 +1114,13 @@
   document.getElementById("roundmode").onchange = function(){ state.billing.roundMode = this.value; save("billing"); renderMoney(); };
 
   /* ========== お金 ========== */
+  var onlyUnpaid = false;
+  document.getElementById("onlyunpaid").onclick = function(){
+    onlyUnpaid = !onlyUnpaid;
+    this.textContent = onlyUnpaid ? "全員を表示" : "未回収だけ表示";
+    renderMoney();
+  };
+
   function renderMoney(){
     var c = compute();
     document.getElementById("per-each").textContent = yen(c.each);
@@ -1116,11 +1143,14 @@
 
     var body = document.getElementById("collectbody");
     body.textContent = "";
-    var left = 0, leftn = 0;
+    var left = 0, leftn = 0, paidSum = 0, leftNames = [];
     c.rows.forEach(function(r){
+      if(!r.p.paid && r.amount > 0){ left += r.amount; leftn++; leftNames.push(r.p.name); }
+      else if(r.p.paid){ paidSum += r.amount; }
+      if(onlyUnpaid && (r.p.paid || r.amount === 0)) return;
       var tr = el("tr", r.p.paid ? "paid" : null);
       tr.appendChild(el("td","nm",r.p.name));
-      tr.appendChild(el("td",null,RATES[r.p.rate].label));
+      tr.appendChild(el("td",null,rateOf(r.p).label));
       tr.appendChild(el("td","r amt", r.amount === 0 ? "—" : yen(r.amount)));
       var td = el("td","r");
       var b = el("button","chip", r.p.paid ? "受領済" : "受領");
@@ -1129,7 +1159,6 @@
       b.setAttribute("aria-label", r.p.name + " から受領");
       b.onclick = function(){ r.p.paid = !r.p.paid; save("roster"); renderMoney(); };
       td.appendChild(b); tr.appendChild(td); body.appendChild(tr);
-      if(!r.p.paid && r.amount > 0){ left += r.amount; leftn++; }
     });
     if(c.rows.length === 0){
       var tr0 = el("tr"), td0 = el("td",null,"1次会の参加者がまだ選ばれていません");
@@ -1138,6 +1167,38 @@
     }
     document.getElementById("c-left").textContent = yen(left);
     document.getElementById("c-leftn").textContent = leftn + "名";
+
+    // ---- 請求漏れ防止の照合 ----
+    document.getElementById("collectcount").textContent =
+      "集金対象 " + c.rows.filter(function(r){ return r.amount > 0; }).length + "名" +
+      (c.rows.length !== c.heads ? "" : "（1次会参加 " + c.heads + "名のうち招待を除く）");
+
+    var st = document.getElementById("collectstatus");
+    st.textContent = "";
+    if(c.rows.length === 0){
+      st.className = "cstat";
+      st.appendChild(el("div","big","—"));
+      st.appendChild(el("div","names","「参加」タブで1次会の参加者を選んでください。"));
+      return;
+    }
+    var billed = c.collect;
+    var ok = (paidSum + left === billed);
+    if(leftn > 0){
+      st.className = "cstat warn";
+      st.appendChild(el("div","big","未回収 " + leftn + "名 ／ " + yen(left)));
+      var nm = el("div","names");
+      nm.innerHTML = "残り: <b>" + leftNames.join("</b>、<b>") + "</b>";
+      st.appendChild(nm);
+    }else{
+      st.className = "cstat done";
+      st.appendChild(el("div","big","全員から受領済み"));
+      st.appendChild(el("div","names","受領 " + yen(paidSum) + " ／ 伝票 " + yen(c.total) +
+        "（" + (c.gap >= 0 ? "余り " : "不足 ") + yen(Math.abs(c.gap)) + "）"));
+    }
+    var eq = el("div","eq" + (ok ? "" : " bad"));
+    eq.textContent = "受領 " + yen(paidSum) + " ＋ 未回収 " + yen(left) + " ＝ " + yen(paidSum + left) +
+      "（請求合計 " + yen(billed) + "）" + (ok ? " ✓ 一致" : " ← 不一致");
+    st.appendChild(eq);
   }
 
   /* ========== お店 ========== */
