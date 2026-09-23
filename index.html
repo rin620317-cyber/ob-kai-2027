@@ -197,8 +197,11 @@
         border-radius:9px;background:var(--accent);color:var(--bg);white-space:nowrap}
   .cta a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-  .stafftoggle{appearance:none;background:none;border:0;font:inherit;font-size:11.5px;
-        color:var(--ink-3);text-decoration:underline;cursor:pointer;padding:0;margin-top:8px}
+  .stafftoggle{appearance:none;margin-left:auto;align-self:center;font:inherit;font-size:11.5px;
+        font-weight:500;color:var(--ink-3);background:var(--surface-2);border:1px solid var(--line-strong);
+        border-radius:999px;padding:5px 12px;cursor:pointer;white-space:nowrap;margin-bottom:8px}
+  .stafftoggle:hover{color:var(--ink-2);border-color:var(--ink-3)}
+  .stafftoggle[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
   .stafftoggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   /* ---------- reservation gap ---------- */
@@ -394,6 +397,7 @@
     <button id="tab-people" role="tab" aria-selected="false" aria-controls="p-people">参加</button>
     <button id="tab-money"  role="tab" aria-selected="false" aria-controls="p-money">会計</button>
     <button id="tab-venue"  role="tab" aria-selected="false" aria-controls="p-venue">お店</button>
+    <button class="stafftoggle" id="stafftoggle" type="button" hidden>幹事メニュー</button>
   </nav>
 
   <div class="strip">
@@ -603,8 +607,7 @@
 
   <div class="foot">
     <span id="savestate" class="savestate">—</span>　最終更新 <span id="updated">—</span><br>
-    営業時間は平常時のもの。正月の営業は必ず電話で確認すること。<br>
-    <button class="stafftoggle" id="stafftoggle" type="button" hidden></button>
+    営業時間は平常時のもの。正月の営業は必ず電話で確認すること。
   </div>
 </div>
 
@@ -1275,7 +1278,9 @@
     STAFF.forEach(function(id){ document.getElementById(id).hidden = !on; });
     var btn = document.getElementById("stafftoggle");
     btn.hidden = IS_ARTIFACT;
-    btn.textContent = on ? "幹事メニューを隠す" : "幹事メニューを表示";
+    btn.textContent = on ? "幹事メニュー ON" : "幹事メニュー";
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    btn.title = on ? "準備・参加・会計タブを隠す" : "準備・参加・会計タブを表示する（幹事用）";
     if(!on){
       var cur = TABS.filter(function(t){ return document.getElementById(t[0]).getAttribute("aria-selected") === "true"; })[0];
       if(cur && STAFF.indexOf(cur[0]) >= 0) showTab("tab-info");
