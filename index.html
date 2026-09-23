@@ -656,8 +656,8 @@
   </section>
 
   <div class="foot">
-    <span id="savestate" class="savestate">—</span>　最終更新 <span id="updated">—</span><br>
-    営業時間は平常時のもの。正月の営業は必ず電話で確認すること。
+    最終更新 <span id="updated">—</span>
+    <span id="savestate" class="savestate" hidden></span>
   </div>
 </div>
 
@@ -803,7 +803,7 @@
 
   function lsRead(k){ try{ var v = localStorage.getItem(LSKEY+k); return v ? JSON.parse(v) : null; }catch(e){ return null; } }
   function lsWrite(k,v){ try{ localStorage.setItem(LSKEY+k, JSON.stringify(v)); }catch(e){} }
-  function setSave(t){ var el=document.getElementById("savestate"); if(el) el.textContent = t; }
+  function setSave(t){ var el=document.getElementById("savestate"); if(el) el.textContent = "／ " + t; }
   function stamp(){
     var d = new Date(), p = function(n){ return (n<10?"0":"")+n; };
     return d.getFullYear()+"/"+p(d.getMonth()+1)+"/"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes());
@@ -1486,6 +1486,8 @@
     STAFF.forEach(function(id){ document.getElementById(id).hidden = !on; });
     var strip = document.getElementById("strip");
     if(strip) strip.hidden = !(IS_ARTIFACT || on);
+    var ss = document.getElementById("savestate");
+    if(ss) ss.hidden = !(IS_ARTIFACT || on);
     var vis = TABS.filter(function(t){ return !document.getElementById(t[0]).hidden; });
     document.getElementById("tab-info").style.display = vis.length > 1 ? "" : "none";
     var btn = document.getElementById("stafftoggle");
