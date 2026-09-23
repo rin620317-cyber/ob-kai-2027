@@ -1385,21 +1385,20 @@
   var irBuf = null, conv = null, wet = null;
   function reverb(c){
     if(conv) return conv;
-    var len = Math.floor(c.sampleRate * 0.38), i, ch, d;
+    var len = Math.floor(c.sampleRate * 0.55), i, ch, d;
     irBuf = c.createBuffer(2, len, c.sampleRate);
     for(ch = 0; ch < 2; ch++){
       d = irBuf.getChannelData(ch);
       for(i = 0; i < len; i++){
         var t = i / len;
-        // 立ち上がりを少し遅らせ、壁までの距離を感じさせる
-        var pre = i < c.sampleRate * 0.008 ? 0.15 : 1;
-        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 3.2) * pre;
+        var pre = i < c.sampleRate * 0.009 ? 0.12 : 1;
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2.6) * pre;
       }
     }
     conv = c.createConvolver();
     conv.buffer = irBuf;
     wet = c.createGain();
-    wet.gain.value = 0.26;
+    wet.gain.value = 0.34;
     conv.connect(wet);
     wet.connect(c.destination);
     return conv;
@@ -1422,20 +1421,34 @@
     src.start(t); src.stop(t + dur + 0.02);
   }
 
-  // 硬式球とガットの衝突音。接触は5ミリ秒ほどで終わり、あとは共鳴の減衰
+  // 音程を持って伸びる成分。「ぉーん」はこれが作る
+  function ring(c, dest, t, freq, peak, dur, drift){
+    var o = c.createOscillator();
+    o.type = "sine";
+    o.frequency.setValueAtTime(freq, t);
+    o.frequency.exponentialRampToValueAtTime(freq * (drift || 0.97), t + dur);
+    var g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(dest);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+
+  // 硬式球とガットの衝突音。パ（破裂）コ（胴鳴り）ぉーん（共鳴の伸び）
   function pock(){
     var c = ctxGet(); if(!c) return;
     if(c.state === "suspended"){ try{ c.resume(); }catch(e){} }
     var t = c.currentTime;
-    var r = 0.94 + Math.random() * 0.13;          // 一球ごとの個体差
-    var hard = 0.75 + Math.random() * 0.5;        // 当たりの厚さ
+    var r = 0.94 + Math.random() * 0.13;
+    var hard = 0.75 + Math.random() * 0.5;
 
     var out = c.createGain();
     out.gain.value = 0.5;
     out.connect(c.destination);
     var rv = reverb(c);
     var send = c.createGain();
-    send.gain.value = 0.7;
+    send.gain.value = 0.8;
     send.connect(rv);
 
     function both(freq, q, peak, dur, sweepTo){
@@ -1443,14 +1456,16 @@
       mode(c, send, t, freq, q, peak, dur, sweepTo);
     }
 
-    // インパクトの立ち上がり。ごく短い高域の破裂
-    both(7000 * r, 0.7, 0.42 * hard, 0.006);
-    // ガットが球を掴んで弾く帯域。実物で最も耳につく成分
-    both(2300 * r, 1.4, 0.75 * hard, 0.022, 1500 * r);
-    // ストリング面の共鳴
-    both(540 * r, 9, 0.60, 0.045, 495 * r);
-    // フレームの共鳴。厚い当たりほど低く長く残る
-    both(185 * r, 13, 0.34 * hard, 0.075);
+    // パ — 立ち上がりの破裂。4ミリ秒で終わる
+    both(7200 * r, 0.7, 0.50 * hard, 0.004);
+    // コ — ガットが球を掴んで弾く胴鳴り
+    both(2200 * r, 1.4, 0.72 * hard, 0.020, 1450 * r);
+    both(520 * r,  9,   0.58,        0.042, 480 * r);
+    both(180 * r,  13,  0.32 * hard, 0.070);
+    // ぉーん — 音程を持った伸び。これがないと「パコッ」で終わる
+    ring(c, out,  t, 560 * r, 0.15, 0.40);
+    ring(c, send, t, 560 * r, 0.22, 0.45);
+    ring(c, send, t, 1080 * r, 0.09, 0.22, 0.985);
   }
 
   var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
