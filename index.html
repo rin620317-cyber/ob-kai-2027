@@ -431,7 +431,7 @@
         <div class="d mono">01<em>.</em>03</div>
         <div class="side">
           <div class="y">2027 SUN</div>
-          <div class="t">12:00 → 18:00</div>
+          <div class="t">12:00 → 17-18:00</div>
         </div>
       </div>
       <h1>テニス部同窓会</h1>
@@ -460,7 +460,7 @@
 
     <h2 class="sec"><span class="n">01</span>開催概要</h2>
     <dl class="facts">
-      <dt>日時</dt><dd>2027年1月3日（日）12:00 〜 18:00</dd>
+      <dt>日時</dt><dd>2027年1月3日（日）12:00 スタート<br><span class="sub">17:00〜18:00 の間に解散します</span></dd>
       <dt>会場</dt><dd>どんがめ 西宮北口店<br><span class="sub">西宮市高松町11-10／阪急 西宮北口駅すぐ</span></dd>
       <dt>2次会</dt><dd>15:00頃に移るかもしれません<br><span class="sub">お店は調整中です</span></dd>
     </dl>
@@ -485,7 +485,7 @@
       <div class="stop key"><div class="t">12:00</div><div class="l">スタート</div></div>
       <div class="stop key"><div class="t">14:45</div><div class="l">会計</div></div>
       <div class="stop"><div class="t">15:00</div><div class="l">2次会（未定）</div></div>
-      <div class="stop key"><div class="t">18:00</div><div class="l">解散</div></div>
+      <div class="stop key"><div class="t">17:00</div><div class="l">解散（〜18:00）</div></div>
     </div>
 
     <h2 class="sec"><span class="n">03</span>参加のしかた</h2>
@@ -507,7 +507,7 @@
         <ul>
           <li>日時と場所</li>
           <li>20名で予約済</li>
-          <li>18:00 解散</li>
+          <li>17:00〜18:00 に解散</li>
           <li>飲み放題・コースはお店になし（単品のみ）</li>
           <li>会費の目安は<b>3,000〜5,000円</b>（女性は6割）</li>
           <li>先生はご招待（会費なし）</li>
@@ -648,7 +648,7 @@
       <label>解散 <input class="mini mono" id="end-at" type="time" step="300"></label>
     </div>
     <div class="note">
-      <b>2次会は「取れたら行く」で十分</b> どんがめが時間制限なしなので、<b>店が見つからなければそのまま18:00まで居座れます</b>。これが既定路線です。<br>
+      <b>2次会は「取れたら行く」で十分</b> どんがめが時間制限なしなので、<b>店が見つからなければそのまま解散まで過ごせます</b>。これが既定路線です。<br>
       その上で15:00に移るなら、17:00開店の3店（京宴・酒飯酔軒・鶴亀八番）は入れません。15時台に入れるのは赤おに家（15:00〜）と餃子のかっちゃん（12:00〜）の2択ですが、かっちゃんは1/3の営業が未定（店側回答・11月に再確認）。<br>
       単品会計なので、店を移ると伝票が2本に割れて精算が倍面倒になります。<b>無理に動かない方が幹事は楽です。</b>
     </div>
@@ -714,6 +714,7 @@
   var LOG = [
     {d:"2026.09.23", m:"飲み放題・コースがお店にない旨を明記。会費が当日確定になる理由を先に示すため。"},
     {d:"2026.09.23", m:"1/3の営業を確認。12時入店・3時間程度の予定を店に伝達済み。以降も営業しているため延長は可能。"},
+    {d:"2026.09.23", m:"解散を 18:00 から 17:00〜18:00 の幅に変更。1次会・2次会ともに3時間で通し6時間は長いため。"},
     {d:"2026.09.23", m:"会費の目安を3,000〜5,000円として明示。確定は当日の伝票次第。先生はご招待とする。"},
     {d:"2026.09.23", m:"キャンセルの連絡締切を前日（1/2）に設定。単品注文なので費用は発生しない旨も明記。"},
     {d:"2026.09.23", m:"女性の会費を6割に決定。当日の空気で決めずに済むよう先に明記。"},
@@ -790,7 +791,7 @@
   var DEFAULTS = {
     billing: {total:null, nFull:0, nSixty:0, nFree:0, pFull:0, pSixty:0,
               roundUnit:1, roundMode:"up", updatedAt:null},
-    nijikai: {moveAt:"15:00", endAt:"18:00", chosen:null, checks:{}, updatedAt:null},
+    nijikai: {moveAt:"15:00", endAt:"17:00", chosen:null, checks:{}, updatedAt:null},
     prep:    {done:{}, callBy:"2026-11-05", roughBy:"2026-12-05", rsvpBy:"2026-12-27", finalBy:"2026-12-28",
               eventAt:"2027-01-03", yoyakuSt:"done", yoyakuN:20,
               cntYes:0, cntMaybe:0, cntNi:0, updatedAt:null}
@@ -1247,7 +1248,7 @@
     });
   }
   document.getElementById("move-at").onchange = function(){ state.nijikai.moveAt = this.value || "15:00"; save("nijikai"); renderVenues(); };
-  document.getElementById("end-at").onchange = function(){ state.nijikai.endAt = this.value || "18:00"; save("nijikai"); renderVenues(); };
+  document.getElementById("end-at").onchange = function(){ state.nijikai.endAt = this.value || "17:00"; save("nijikai"); renderVenues(); };
 
   /* ========== 打球音（硬式球のインパクトを合成）とボール ========== */
   var SND = LSKEY + "sound", actx = null, nbuf = null;
