@@ -169,6 +169,15 @@
   .cd input[type="date"]{font:inherit;font-size:12px;padding:4px 6px;border-radius:7px;
       border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
 
+  /* ---------- flying ball ---------- */
+  .flyball{position:fixed;z-index:90;width:26px;height:26px;border-radius:50%;pointer-events:none;
+        background:radial-gradient(circle at 32% 28%,#E4F78C,#A9C92E 72%);
+        box-shadow:0 6px 18px rgba(20,63,52,.35);will-change:transform,opacity}
+  .flyball::before,.flyball::after{content:"";position:absolute;inset:-14% -14%;border-radius:50%;
+        border:2px solid rgba(255,255,255,.9)}
+  .flyball::before{clip-path:inset(0 60% 0 0)}
+  .flyball::after{clip-path:inset(0 0 0 60%)}
+
   /* ---------- status / log / cta ---------- */
   .status2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .scol{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
@@ -197,6 +206,11 @@
         border-radius:9px;background:var(--accent);color:var(--bg);white-space:nowrap}
   .cta a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
+  .soundtoggle{appearance:none;align-self:center;font:inherit;font-size:11.5px;font-weight:500;
+        color:var(--ink-3);background:var(--surface-2);border:1px solid var(--line-strong);
+        border-radius:999px;padding:5px 12px;cursor:pointer;white-space:nowrap;margin:0 0 8px 6px}
+  .soundtoggle[aria-pressed="true"]{background:var(--court);border-color:var(--court);color:var(--ball)}
+  .soundtoggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .stafftoggle{appearance:none;margin-left:auto;align-self:center;font:inherit;font-size:11.5px;
         font-weight:500;color:var(--ink-3);background:var(--surface-2);border:1px solid var(--line-strong);
         border-radius:999px;padding:5px 12px;cursor:pointer;white-space:nowrap;margin-bottom:8px}
@@ -398,6 +412,7 @@
     <button id="tab-money"  role="tab" aria-selected="false" aria-controls="p-money">会計</button>
     <button id="tab-venue"  role="tab" aria-selected="false" aria-controls="p-venue">お店</button>
     <button class="stafftoggle" id="stafftoggle" type="button" hidden>幹事メニュー</button>
+    <button class="soundtoggle" id="soundtoggle" type="button">打球音</button>
   </nav>
 
   <div class="strip">
@@ -1239,6 +1254,108 @@
   document.getElementById("move-at").onchange = function(){ state.nijikai.moveAt = this.value || "15:00"; save("nijikai"); renderVenues(); };
   document.getElementById("end-at").onchange = function(){ state.nijikai.endAt = this.value || "18:00"; save("nijikai"); renderVenues(); };
 
+  /* ========== 打球音（硬式球のインパクトを合成）とボール ========== */
+  var SND = LSKEY + "sound", actx = null, nbuf = null;
+  function soundOn(){ try{ return localStorage.getItem(SND) !== "0"; }catch(e){ return true; } }
+  function ctxGet(){
+    if(actx) return actx;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    try{ actx = new AC(); }catch(e){ return null; }
+    return actx;
+  }
+  function noise(c){
+    if(nbuf) return nbuf;
+    var n = Math.floor(c.sampleRate * 0.3);
+    nbuf = c.createBuffer(1, n, c.sampleRate);
+    var d = nbuf.getChannelData(0);
+    for(var i=0;i<n;i++) d[i] = Math.random()*2-1;
+    return nbuf;
+  }
+  // ガットが球を掴む帯域ノイズ＋フレームの弾け＋潰れた球が戻るボディ、の3層
+  function pock(){
+    var c = ctxGet(); if(!c) return;
+    if(c.state === "suspended"){ try{ c.resume(); }catch(e){} }
+    var t = c.currentTime, r = 0.93 + Math.random()*0.15;
+    var out = c.createGain(); out.gain.value = 0.55; out.connect(c.destination);
+
+    var n1 = c.createBufferSource(); n1.buffer = noise(c);
+    var bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.1;
+    bp.frequency.setValueAtTime(2700*r, t);
+    bp.frequency.exponentialRampToValueAtTime(1050*r, t+0.06);
+    var g1 = c.createGain();
+    g1.gain.setValueAtTime(0.0001, t);
+    g1.gain.exponentialRampToValueAtTime(0.9, t+0.0015);
+    g1.gain.exponentialRampToValueAtTime(0.0001, t+0.085);
+    n1.connect(bp); bp.connect(g1); g1.connect(out);
+
+    var n2 = c.createBufferSource(); n2.buffer = noise(c);
+    var hp = c.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 5400;
+    var g2 = c.createGain();
+    g2.gain.setValueAtTime(0.0001, t);
+    g2.gain.exponentialRampToValueAtTime(0.55, t+0.001);
+    g2.gain.exponentialRampToValueAtTime(0.0001, t+0.024);
+    n2.connect(hp); hp.connect(g2); g2.connect(out);
+
+    var o = c.createOscillator(); o.type = "triangle";
+    o.frequency.setValueAtTime(640*r, t);
+    o.frequency.exponentialRampToValueAtTime(295*r, t+0.05);
+    var g3 = c.createGain();
+    g3.gain.setValueAtTime(0.0001, t);
+    g3.gain.exponentialRampToValueAtTime(0.45, t+0.003);
+    g3.gain.exponentialRampToValueAtTime(0.0001, t+0.09);
+    o.connect(g3); g3.connect(out);
+
+    n1.start(t); n1.stop(t+0.3);
+    n2.start(t); n2.stop(t+0.07);
+    o.start(t);  o.stop(t+0.13);
+  }
+
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function flyBall(x, y){
+    var b = document.createElement("div");
+    b.className = "flyball";
+    b.style.left = x + "px"; b.style.top = y + "px";
+    document.body.appendChild(b);
+    var frames, opt;
+    if(calm){
+      frames = [{transform:"translate(-50%,-50%) scale(.9)", opacity:.9},
+                {transform:"translate(-50%,-50%) scale(1)", opacity:0}];
+      opt = {duration:340, easing:"ease-out"};
+    }else{
+      var dx = (Math.random()*2-1)*90, dy = -(130 + Math.random()*90), rot = (Math.random()*2-1)*460;
+      frames = [
+        {transform:"translate(-50%,-50%) scale(.25) rotate(0deg)", opacity:1},
+        {transform:"translate(calc(-50% + "+(dx*0.55)+"px), calc(-50% + "+dy+"px)) scale(1.12) rotate("+(rot*0.6)+"deg)", opacity:1, offset:.45},
+        {transform:"translate(calc(-50% + "+dx+"px), calc(-50% + "+(dy*0.2)+"px)) scale(.8) rotate("+rot+"deg)", opacity:0}
+      ];
+      opt = {duration:780, easing:"cubic-bezier(.22,.7,.3,1)"};
+    }
+    if(b.animate){
+      b.animate(frames, opt).onfinish = function(){ b.remove(); };
+    }else{
+      setTimeout(function(){ b.remove(); }, 500);
+    }
+  }
+
+  function syncSound(){
+    var b = document.getElementById("soundtoggle"), on = soundOn();
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+    b.textContent = on ? "打球音 ON" : "打球音 OFF";
+    b.title = on ? "タップ音を止める" : "タップでテニスボールと打球音を出す";
+  }
+  document.getElementById("soundtoggle").onclick = function(){
+    try{ localStorage.setItem(SND, soundOn() ? "0" : "1"); }catch(e){}
+    syncSound();
+  };
+  document.addEventListener("click", function(e){
+    if(!soundOn()) return;
+    var tn = e.target && e.target.tagName;
+    if(tn === "INPUT" || tn === "TEXTAREA" || tn === "SELECT" || tn === "A") return;
+    pock();
+    flyBall(e.clientX, e.clientY);
+  }, true);
+
   /* ========== 概要タブの読み物パーツ ========== */
   function renderLog(){
     var host = document.getElementById("log");
@@ -1324,6 +1441,7 @@
     renderVenues();
     showUpdated();
   }
+  syncSound();
   renderPresets();
   renderLog();
   renderFormCta();
