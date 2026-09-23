@@ -1451,11 +1451,14 @@
 
   /* ========== 参加者一覧（公開用シートから読む） ========== */
   function parseCsv(text){
-    return text.replace(/
-/g, "").split("
-")
-      .map(function(line){ return line.split(","); })
-      .filter(function(cols){ return cols.length >= 1 && cols[0].trim() !== ""; });
+    var LF = String.fromCharCode(10), CR = String.fromCharCode(13);
+    var lines = text.split(LF), out = [], i, line;
+    for(i = 0; i < lines.length; i++){
+      line = lines[i].split(CR).join("");
+      if(line.trim() === "") continue;
+      out.push(line.split(","));
+    }
+    return out;
   }
   function renderRoll(){
     var host = document.getElementById("roll");
