@@ -117,7 +117,7 @@
   .stampline .side{padding-bottom:5px}
   .stampline .side .y{font-family:"Roboto Mono",monospace;font-size:13px;color:#A9C3B4;letter-spacing:.14em}
   .stampline .side .t{font-weight:700;font-size:16px;margin-top:2px}
-  .hero h1{font-size:17px;font-weight:700;margin-top:18px}
+  .hero h1{font-size:20px;font-weight:700;margin-top:18px;letter-spacing:.01em}
   .hero .venue{font-size:13.5px;color:#A9C3B4;margin-top:2px}
   .hero .dday{position:absolute;right:0;top:2px;text-align:right}
   .hero .dday .n{font-family:"Roboto Mono",monospace;font-size:30px;font-weight:700;line-height:1;color:var(--ball)}
@@ -141,10 +141,14 @@
 
   section[hidden]{display:none!important}
   .panel{padding-block:22px}
-  h2.sec{font-size:15px;letter-spacing:.02em;display:flex;align-items:baseline;gap:10px;margin-block:26px 10px}
-  .panel > h2.sec:first-child{margin-top:18px}
-  h2.sec .n{font-family:"Roboto Mono",monospace;font-size:11px;color:var(--accent);font-weight:500}
-  .hint{font-size:12.5px;color:var(--ink-2);margin:0 0 12px}
+  h2.sec{font-size:17.5px;font-weight:700;letter-spacing:.01em;line-height:1.4;
+        display:flex;align-items:center;gap:11px;margin-block:36px 14px}
+  h2.sec::after{content:"";flex:1 1 auto;height:1px;background:var(--line-strong)}
+  .panel > h2.sec:first-child{margin-top:20px}
+  h2.sec .n{flex:none;font-family:"Roboto Mono",monospace;font-size:10.5px;font-weight:700;
+        letter-spacing:.06em;color:var(--bg);background:var(--accent);
+        padding:4px 8px;border-radius:6px}
+  .hint{font-size:13px;color:var(--ink-2);margin:0 0 12px;line-height:1.8}
   .empty{font-size:13px;color:var(--ink-3);padding:18px 0;text-align:center;border:1px dashed var(--line-strong);border-radius:12px}
 
   /* ---------- 会費の枠 ---------- */
@@ -161,9 +165,9 @@
   /* ---------- facts ---------- */
   dl.facts{margin:0;display:grid;grid-template-columns:5.5em 1fr;align-items:baseline;
         background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 16px}
-  dl.facts dt{color:var(--ink-3);font-size:11.5px;font-weight:700;letter-spacing:.04em;
-        padding:13px 0;border-bottom:1px solid var(--line)}
-  dl.facts dd{margin:0;padding:13px 0;font-size:15px;line-height:1.6;border-bottom:1px solid var(--line)}
+  dl.facts dt{color:var(--accent);font-size:11.5px;font-weight:700;letter-spacing:.06em;
+        padding:14px 0;border-bottom:1px solid var(--line)}
+  dl.facts dd{margin:0;padding:14px 0;font-size:15px;line-height:1.65;border-bottom:1px solid var(--line)}
   dl.facts dd .sub{font-size:12px;color:var(--ink-3);line-height:1.7}
   dl.facts dt:last-of-type,dl.facts dd:last-of-type{border-bottom:0}
 
@@ -225,7 +229,7 @@
   .scol{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
   .scol.fixed{border-left:3px solid var(--accent)}
   .scol.open{border-left:3px solid var(--warn)}
-  .scol .sh{font-size:11px;letter-spacing:.1em;font-weight:700;margin-bottom:8px}
+  .scol .sh{font-size:11.5px;letter-spacing:.1em;font-weight:700;margin-bottom:10px}
   .scol.fixed .sh{color:var(--accent)}
   .scol.open .sh{color:var(--warn)}
   .scol ul{margin:0;padding-left:1.1em;font-size:13px;line-height:1.75;color:var(--ink-2)}
@@ -1049,50 +1053,82 @@
     state.billing.roundMode = this.value; save("billing"); renderMoney();
   };
 
-  function stepper(host, label, sub, get, set, maxGet){
+  // カウンターは一度だけ作り、以後は数字だけ書き換える（連打で取りこぼさないように）
+  var steps = null;
+  function makeStep(host, key, label){
     var row = el("div","crow");
     var lab = el("div","lab");
     lab.appendChild(document.createTextNode(label));
-    if(sub) lab.appendChild(el("small", null, sub));
+    var sub = el("small", null, "");
+    lab.appendChild(sub);
     row.appendChild(lab);
     var st = el("div","st");
     var minus = el("button", null, "−");
-    var num = el("div","n", String(get()));
+    var num = el("div","n","0");
     var plus = el("button", null, "+");
+    var of = el("span","of","");
     minus.type = plus.type = "button";
     minus.setAttribute("aria-label", label + " を1減らす");
     plus.setAttribute("aria-label", label + " を1増やす");
-    minus.disabled = get() <= 0;
-    if(maxGet) plus.disabled = get() >= maxGet();
-    minus.onclick = function(){ set(Math.max(0, get() - 1)); };
-    plus.onclick  = function(){ set(get() + (maxGet && get() >= maxGet() ? 0 : 1)); };
-    st.appendChild(minus); st.appendChild(num); st.appendChild(plus);
-    if(maxGet){ st.appendChild(el("span","of", "/ " + maxGet())); }
+    st.appendChild(minus); st.appendChild(num); st.appendChild(plus); st.appendChild(of);
     row.appendChild(st);
     host.appendChild(row);
+    return {row:row, sub:sub, num:num, minus:minus, plus:plus, of:of, key:key};
   }
-
-  function setCount(key, v){
-    state.billing[key] = v;
-    if(key === "nFull"  && state.billing.pFull  > v) state.billing.pFull  = v;
-    if(key === "nSixty" && state.billing.pSixty > v) state.billing.pSixty = v;
-    save("billing"); renderMoney();
+  function buildSteps(){
+    if(steps) return;
+    var a = document.getElementById("counts"), b = document.getElementById("paidcounts");
+    a.textContent = ""; b.textContent = "";
+    steps = {
+      nFull:  makeStep(a, "nFull",  "通常"),
+      nSixty: makeStep(a, "nSixty", "6割"),
+      nFree:  makeStep(a, "nFree",  "招待"),
+      pFull:  makeStep(b, "pFull",  "通常から受領"),
+      pSixty: makeStep(b, "pSixty", "6割から受領")
+    };
+    Object.keys(steps).forEach(function(k){
+      var st = steps[k];
+      st.minus.onclick = function(){ bump(k, -1); };
+      st.plus.onclick  = function(){ bump(k, +1); };
+    });
+  }
+  function bump(key, d){
+    var b = state.billing;
+    var v = Math.max(0, (Number(b[key]) || 0) + d);
+    if(key === "pFull")  v = Math.min(v, Number(b.nFull)  || 0);
+    if(key === "pSixty") v = Math.min(v, Number(b.nSixty) || 0);
+    b[key] = v;
+    if(key === "nFull"  && (Number(b.pFull)  || 0) > v) b.pFull  = v;
+    if(key === "nSixty" && (Number(b.pSixty) || 0) > v) b.pSixty = v;
+    save("billing");
+    renderMoney();
   }
 
   function renderMoney(){
+    buildSteps();
     var c = compute();
 
-    // その場の人数
-    var host = document.getElementById("counts");
-    host.textContent = "";
-    GROUPS.forEach(function(g){
-      var nk = g.key === "full" ? "nFull" : (g.key === "sixty" ? "nSixty" : "nFree");
-      stepper(host, g.label, g.sub,
-        function(){ return Math.max(0, Number(state.billing[nk]) || 0); },
-        function(v){ setCount(nk, v); });
-    });
+    steps.nFull.num.textContent  = c.nF;
+    steps.nSixty.num.textContent = c.nS;
+    steps.nFree.num.textContent  = c.nZ;
+    steps.nFull.sub.textContent  = "男性・そのほか";
+    steps.nSixty.sub.textContent = "女性";
+    steps.nFree.sub.textContent  = "顧問の先生";
+    steps.nFull.minus.disabled  = c.nF <= 0;
+    steps.nSixty.minus.disabled = c.nS <= 0;
+    steps.nFree.minus.disabled  = c.nZ <= 0;
 
-    // 金額
+    steps.pFull.num.textContent  = c.pF;
+    steps.pSixty.num.textContent = c.pS;
+    steps.pFull.sub.textContent  = c.nF > 0 ? yen(c.aF) + " × " + c.nF + "名" : "人数が未入力です";
+    steps.pSixty.sub.textContent = c.nS > 0 ? yen(c.aS) + " × " + c.nS + "名" : "人数が未入力です";
+    steps.pFull.of.textContent   = "/ " + c.nF;
+    steps.pSixty.of.textContent  = "/ " + c.nS;
+    steps.pFull.minus.disabled  = c.pF <= 0;
+    steps.pSixty.minus.disabled = c.pS <= 0;
+    steps.pFull.plus.disabled   = c.pF >= c.nF;
+    steps.pSixty.plus.disabled  = c.pS >= c.nS;
+
     document.getElementById("per-full").textContent  = c.units > 0 ? yen(c.aF) : "—";
     document.getElementById("per-sixty").textContent = c.units > 0 ? yen(c.aS) : "—";
     document.getElementById("m-total").textContent   = yen(c.total);
@@ -1108,19 +1144,6 @@
     document.getElementById("s-full").textContent  = c.units > 0 ? yen(c.aF) : "—";
     document.getElementById("s-sixty").textContent = c.units > 0 ? yen(c.aS) : "—";
 
-    // 集金
-    var ph = document.getElementById("paidcounts");
-    ph.textContent = "";
-    stepper(ph, "通常から受領", c.nF > 0 ? yen(c.aF) + " × " + c.nF + "名" : "人数が未入力です",
-      function(){ return c.pF; },
-      function(v){ state.billing.pFull = v; save("billing"); renderMoney(); },
-      function(){ return c.nF; });
-    stepper(ph, "6割から受領", c.nS > 0 ? yen(c.aS) + " × " + c.nS + "名" : "人数が未入力です",
-      function(){ return c.pS; },
-      function(v){ state.billing.pSixty = v; save("billing"); renderMoney(); },
-      function(){ return c.nS; });
-
-    // 照合
     var st = document.getElementById("collectstatus");
     st.textContent = "";
     if(c.collect <= 0){
