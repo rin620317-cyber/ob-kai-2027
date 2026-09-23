@@ -623,7 +623,7 @@
     <div class="opts"><button class="btn sub" type="button" id="bulk-go">取り込む</button><span id="bulk-msg"></span></div>
 
     <h2 class="sec"><span class="n">03</span>負担区分</h2>
-    <p class="hint">各行のセレクトで <b>通常 / 7割 / 半額 / 招待（0円）</b> を選べます。女性を減額する場合はここで切り替えてください。減額・招待で浮いた分は通常区分のメンバーで按分されるため、割引する人数が増えるほど通常の1人あたりが上がります。<b>割引をやるなら当日の会計前に宣言しておく</b>のが揉めないコツです。</p>
+    <p class="hint">各行のセレクトで <b>通常 / 6割（女性） / 半額 / 招待（0円）</b> を選べます。<b>女性は6割、先生は招待</b>で運用します。減額・招待で浮いた分は通常区分のメンバーで按分されるため、割引する人数が増えるほど通常の1人あたりが上がります。<b>割引をやるなら当日の会計前に宣言しておく</b>のが揉めないコツです。</p>
   </section>
 
   <!-- ============ 会計 ============ -->
@@ -1381,43 +1381,76 @@
     for(var i=0;i<n;i++) d[i] = Math.random()*2-1;
     return nbuf;
   }
-  // ガットが球を掴む帯域ノイズ＋フレームの弾け＋潰れた球が戻るボディ、の3層
+  // コートの反射音。これがないと無響室の音になり、合成だとすぐ分かる
+  var irBuf = null, conv = null, wet = null;
+  function reverb(c){
+    if(conv) return conv;
+    var len = Math.floor(c.sampleRate * 0.38), i, ch, d;
+    irBuf = c.createBuffer(2, len, c.sampleRate);
+    for(ch = 0; ch < 2; ch++){
+      d = irBuf.getChannelData(ch);
+      for(i = 0; i < len; i++){
+        var t = i / len;
+        // 立ち上がりを少し遅らせ、壁までの距離を感じさせる
+        var pre = i < c.sampleRate * 0.008 ? 0.15 : 1;
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 3.2) * pre;
+      }
+    }
+    conv = c.createConvolver();
+    conv.buffer = irBuf;
+    wet = c.createGain();
+    wet.gain.value = 0.26;
+    conv.connect(wet);
+    wet.connect(c.destination);
+    return conv;
+  }
+
+  // 帯域を絞ったノイズを1つの共鳴として鳴らす
+  function mode(c, dest, t, freq, q, peak, dur, sweepTo){
+    var src = c.createBufferSource();
+    src.buffer = noise(c);
+    var bp = c.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.Q.value = q;
+    bp.frequency.setValueAtTime(freq, t);
+    if(sweepTo){ bp.frequency.exponentialRampToValueAtTime(sweepTo, t + dur); }
+    var g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + 0.0008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(bp); bp.connect(g); g.connect(dest);
+    src.start(t); src.stop(t + dur + 0.02);
+  }
+
+  // 硬式球とガットの衝突音。接触は5ミリ秒ほどで終わり、あとは共鳴の減衰
   function pock(){
     var c = ctxGet(); if(!c) return;
     if(c.state === "suspended"){ try{ c.resume(); }catch(e){} }
-    var t = c.currentTime, r = 0.93 + Math.random()*0.15;
-    var out = c.createGain(); out.gain.value = 0.55; out.connect(c.destination);
+    var t = c.currentTime;
+    var r = 0.94 + Math.random() * 0.13;          // 一球ごとの個体差
+    var hard = 0.75 + Math.random() * 0.5;        // 当たりの厚さ
 
-    var n1 = c.createBufferSource(); n1.buffer = noise(c);
-    var bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.1;
-    bp.frequency.setValueAtTime(2700*r, t);
-    bp.frequency.exponentialRampToValueAtTime(1050*r, t+0.06);
-    var g1 = c.createGain();
-    g1.gain.setValueAtTime(0.0001, t);
-    g1.gain.exponentialRampToValueAtTime(0.9, t+0.0015);
-    g1.gain.exponentialRampToValueAtTime(0.0001, t+0.085);
-    n1.connect(bp); bp.connect(g1); g1.connect(out);
+    var out = c.createGain();
+    out.gain.value = 0.5;
+    out.connect(c.destination);
+    var rv = reverb(c);
+    var send = c.createGain();
+    send.gain.value = 0.7;
+    send.connect(rv);
 
-    var n2 = c.createBufferSource(); n2.buffer = noise(c);
-    var hp = c.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 5400;
-    var g2 = c.createGain();
-    g2.gain.setValueAtTime(0.0001, t);
-    g2.gain.exponentialRampToValueAtTime(0.55, t+0.001);
-    g2.gain.exponentialRampToValueAtTime(0.0001, t+0.024);
-    n2.connect(hp); hp.connect(g2); g2.connect(out);
+    function both(freq, q, peak, dur, sweepTo){
+      mode(c, out,  t, freq, q, peak, dur, sweepTo);
+      mode(c, send, t, freq, q, peak, dur, sweepTo);
+    }
 
-    var o = c.createOscillator(); o.type = "triangle";
-    o.frequency.setValueAtTime(640*r, t);
-    o.frequency.exponentialRampToValueAtTime(295*r, t+0.05);
-    var g3 = c.createGain();
-    g3.gain.setValueAtTime(0.0001, t);
-    g3.gain.exponentialRampToValueAtTime(0.45, t+0.003);
-    g3.gain.exponentialRampToValueAtTime(0.0001, t+0.09);
-    o.connect(g3); g3.connect(out);
-
-    n1.start(t); n1.stop(t+0.3);
-    n2.start(t); n2.stop(t+0.07);
-    o.start(t);  o.stop(t+0.13);
+    // インパクトの立ち上がり。ごく短い高域の破裂
+    both(7000 * r, 0.7, 0.42 * hard, 0.006);
+    // ガットが球を掴んで弾く帯域。実物で最も耳につく成分
+    both(2300 * r, 1.4, 0.75 * hard, 0.022, 1500 * r);
+    // ストリング面の共鳴
+    both(540 * r, 9, 0.60, 0.045, 495 * r);
+    // フレームの共鳴。厚い当たりほど低く長く残る
+    both(185 * r, 13, 0.34 * hard, 0.075);
   }
 
   var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
