@@ -239,13 +239,6 @@
 
   ul.plain{margin:0;padding-left:1.15em;font-size:13.5px;line-height:1.85;color:var(--ink-2)}
   ul.plain b{color:var(--ink)}
-  ol.log{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);margin-left:6px}
-  ol.log li{position:relative;padding:0 0 16px 20px}
-  ol.log li::before{content:"";position:absolute;left:-6px;top:7px;width:10px;height:10px;
-        border-radius:50%;background:var(--line-strong);border:2px solid var(--bg)}
-  ol.log li:first-child::before{background:var(--accent)}
-  ol.log .d{font-family:"Roboto Mono",monospace;font-size:11px;color:var(--ink-3);letter-spacing:.04em}
-  ol.log .m{font-size:13.5px;line-height:1.7}
 
   .cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--accent-soft);
         border:1px solid var(--accent);border-radius:12px;padding:14px 16px;margin-top:16px}
@@ -568,8 +561,6 @@
       <dt>1月2日</dt><dd>前日リマインド</dd>
     </dl>
 
-    <h2 class="sec"><span class="n">06</span>更新履歴</h2>
-    <ol class="log" id="log"></ol>
   </section>
 
   <!-- ============ 準備 ============ -->
@@ -745,26 +736,6 @@
   // 公開用シートのCSV。空のうちは一覧を出さない。
   var LIST_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRTLSRchanMJ3kh-EszHZQWZzpj9XFGnpmwICKSrYXVQeT_2PGtz9on8ebZg7318_TCxVosIsm4YmK/pub?gid=31583898&single=true&output=csv";
   var LIST_MIN = 8;   // この人数に達するまでは一覧を表示しない
-
-  var LOG = [
-    {d:"2026.09.23", m:"飲み放題・コースがお店にない旨を明記。会費が当日確定になる理由を先に示すため。"},
-    {d:"2026.09.23", m:"1/3の営業を確認。12時入店・3時間程度の予定を店に伝達済み。以降も営業しているため延長は可能。"},
-    {d:"2026.09.23", m:"解散を 18:00 から 17:00〜18:00 の幅に変更。1次会・2次会ともに3時間で通し6時間は長いため。"},
-    {d:"2026.09.23", m:"会費の目安を3,000〜5,000円として明示。確定は当日の伝票次第。先生はご招待とする。"},
-    {d:"2026.09.23", m:"キャンセルの連絡締切を前日（1/2）に設定。単品注文なので費用は発生しない旨も明記。"},
-    {d:"2026.09.23", m:"女性の会費を6割に決定。当日の空気で決めずに済むよう先に明記。"},
-    {d:"2026.09.23", m:"精算はキャッシュレスを推奨に変更。幹事が多額の現金を持つ状態を避けるため。"},
-    {d:"2026.09.23", m:"参加予定の方の一覧を自動表示する仕組みを追加。掲載に同意された方の姓のみ、8名に達した時点から表示します。"},
-    {d:"2026.09.23", m:"出欠フォームを公開。ページ下部のボタンから回答できます。"},
-    {d:"2026.09.23", m:"幹事への精算方法を拡大。現金に加えて PayPay・楽天ペイ・au PAY でも受け付ける。なおお店側のQR決済はPayPayのみ（掲載情報）。"},
-    {d:"2026.09.23", m:"当日の遅刻・欠席の連絡は幹事経由に統一。お店への直接連絡はお願いしない方針。"},
-    {d:"2026.09.23", m:"どんがめは時間制限なしと確認。2次会の店が取れなければ、そのままどんがめで18:00まで過ごす方針。"},
-    {d:"2026.09.23", m:"どんがめに飲み放題のプランはないと判明。すべて単品注文で、会費は当日の伝票を人数で割る。"},
-    {d:"2026.09.23", m:"どんがめに20名で予約。減員・全キャンセルとも事前連絡でOKとの回答。12月に入った時点で概数を伝えると約束。"},
-    {d:"2026.09.23", m:"解散目標を20:00から18:00へ変更。翌1/4(月)から仕事始めの人が多いため。"},
-    {d:"2026.09.23", m:"2次会は15:00移動を想定。ただし候補5店のうち3店は17:00開店で入れず、餃子のかっちゃんは1/3の営業が未定との回答。無理には動かない方針。"},
-    {d:"2026.09.23", m:"このページを公開。以降の決定はここに追記します。"}
-  ];
 
   var VENUES = [
     {id:"v1", name:"餃子のかっちゃん 西宮北口店", tel:"0798-31-0909", open:"12:00〜24:00", opensAt:"12:00",
@@ -1637,16 +1608,6 @@
   }, true);
 
   /* ========== 概要タブの読み物パーツ ========== */
-  function renderLog(){
-    var host = document.getElementById("log");
-    host.textContent = "";
-    LOG.forEach(function(e){
-      var li = el("li");
-      li.appendChild(el("div","d",e.d));
-      li.appendChild(el("div","m",e.m));
-      host.appendChild(li);
-    });
-  }
   function renderFormCta(){
     var host = document.getElementById("formtop");
     host.textContent = "";
@@ -1788,7 +1749,6 @@
 
   syncSound();
   renderRoll();
-  renderLog();
   renderFormCta();
   renderAll();
   try{
