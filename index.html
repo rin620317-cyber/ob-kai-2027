@@ -147,11 +147,24 @@
   .hint{font-size:12.5px;color:var(--ink-2);margin:0 0 12px}
   .empty{font-size:13px;color:var(--ink-3);padding:18px 0;text-align:center;border:1px dashed var(--line-strong);border-radius:12px}
 
+  /* ---------- 会費の枠 ---------- */
+  .feebox{margin-top:14px;background:var(--surface);border:1px solid var(--line);
+        border-left:3px solid var(--accent);border-radius:4px 12px 12px 4px;padding:16px 18px}
+  .feebox .amt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+        padding-bottom:12px;margin-bottom:12px;border-bottom:1px dashed var(--line-strong)}
+  .feebox .amt b{font-family:"Roboto Mono",monospace;font-size:27px;font-weight:500;
+        letter-spacing:-.01em;color:var(--accent);font-variant-numeric:tabular-nums}
+  .feebox .amt span{font-size:11px;letter-spacing:.1em;color:var(--ink-3);font-weight:700}
+  .feebox ul{margin:0;padding-left:1.1em;font-size:13.5px;line-height:1.85;color:var(--ink-2)}
+  .feebox ul b{color:var(--ink)}
+
   /* ---------- facts ---------- */
   dl.facts{margin:0;display:grid;grid-template-columns:5.5em 1fr;align-items:baseline;
         background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 16px}
-  dl.facts dt{color:var(--ink-3);font-size:12.5px;padding:10px 0;border-bottom:1px solid var(--line)}
-  dl.facts dd{margin:0;padding:10px 0;font-size:14.5px;border-bottom:1px solid var(--line)}
+  dl.facts dt{color:var(--ink-3);font-size:11.5px;font-weight:700;letter-spacing:.04em;
+        padding:13px 0;border-bottom:1px solid var(--line)}
+  dl.facts dd{margin:0;padding:13px 0;font-size:15px;line-height:1.6;border-bottom:1px solid var(--line)}
+  dl.facts dd .sub{font-size:12px;color:var(--ink-3);line-height:1.7}
   dl.facts dt:last-of-type,dl.facts dd:last-of-type{border-bottom:0}
 
   /* ---------- timeline ---------- */
@@ -473,8 +486,8 @@
   </nav>
 
   <div class="strip" id="strip">
-    <div><div class="k">1次会</div><div class="v" id="s-ichi">—</div></div>
-    <div><div class="k">2次会</div><div class="v" id="s-ni">—</div></div>
+    <div><div class="k">割り勘の対象</div><div class="v" id="s-ichi">—</div></div>
+    <div><div class="k">2次会へ</div><div class="v" id="s-ni">—</div></div>
     <div><div class="k">1人あたり</div><div class="v" id="s-each">—</div></div>
   </div>
 
@@ -485,17 +498,22 @@
     <h2 class="sec"><span class="n">01</span>開催概要</h2>
     <dl class="facts">
       <dt>日時</dt><dd>2027年1月3日（日）12:00 〜 18:00</dd>
-      <dt>会場</dt><dd>どんがめ 西宮北口店<br>西宮市高松町11-10（阪急 西宮北口駅すぐ）</dd>
-      <dt>受付</dt><dd>お店で「<b>りん で予約です</b>」とお伝えください。時間になったら直接お越しください</dd>
-      <dt>お食事</dt><dd><b>お店に飲み放題プランもコースメニューもありません</b>（お店の仕様です）。すべて単品注文になります</dd>
-      <dt>会費</dt><dd><b>おおよそ 3,000〜5,000円</b> を見込んでいます<br>
-      当日の伝票を人数で割るため、注文内容と参加構成によって前後します。<b>女性は6割の金額です</b><br>
-      幹事への精算は <b>PayPay・楽天ペイ・au PAY をおすすめします</b>（現金も可）</dd>
-      <dt>2次会</dt><dd>15:00頃に移るかもしれません（調整中）</dd>
+      <dt>会場</dt><dd>どんがめ 西宮北口店<br><span class="sub">西宮市高松町11-10／阪急 西宮北口駅すぐ</span></dd>
+      <dt>2次会</dt><dd>15:00頃に移るかもしれません<br><span class="sub">お店は調整中です</span></dd>
     </dl>
     <div class="links" style="margin-top:10px">
       <a href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%A9%E3%82%93%E3%81%8C%E3%82%81%20%E8%A5%BF%E5%AE%AE%E5%8C%97%E5%8F%A3" target="_blank" rel="noopener">地図を開く</a>
       <a href="https://tabelog.com/rstLst/?sk=%E3%81%A9%E3%82%93%E3%81%8C%E3%82%81%20%E8%A5%BF%E5%AE%AE%E5%8C%97%E5%8F%A3" target="_blank" rel="noopener">お店の情報</a>
+    </div>
+
+    <div class="feebox">
+      <div class="amt"><b>3,000 〜 5,000</b>円 <span>会費の目安</span></div>
+      <ul>
+        <li>当日の伝票を人数で割ります。<b>金額は当日確定します</b></li>
+        <li><b>女性は6割</b>の金額です</li>
+        <li>お店に飲み放題プランもコースメニューもないため、すべて単品注文です</li>
+        <li>精算は <b>PayPay・楽天ペイ・au PAY</b> にご協力ください（現金も可）</li>
+      </ul>
     </div>
 
     <h2 class="sec"><span class="n">02</span>当日の流れ</h2>
@@ -508,7 +526,8 @@
 
     <h2 class="sec"><span class="n">03</span>参加のしかた</h2>
     <ul class="plain">
-      <li>出欠は上のフォームから。<b>未定のままでOK</b>、あとから変更できます</li>
+      <li>出欠は画面下のボタンから。<b>未定のままでOK</b>、あとから変更できます</li>
+      <li>お店では「<b>りん で予約です</b>」とお伝えください。時間になったら直接お越しください</li>
       <li>同学年が中心ですが、前後の代の方も女子テニス部の方も歓迎です</li>
       <li>途中参加・途中退席は問題ありません。フォームの備考欄にひとこと書いてください</li>
       <li>精算は<b>キャッシュレスにご協力ください</b>。人数分の現金を幹事が持ち歩かずに済みます</li>
@@ -1173,7 +1192,9 @@
 
     document.getElementById("s-ichi").innerHTML = c.heads + '<small>名</small>';
     document.getElementById("s-ni").innerHTML = state.roster.people.filter(function(p){ return p.ni; }).length + '<small>名</small>';
-    document.getElementById("s-each").textContent = yen(c.each);
+    document.getElementById("s-each").innerHTML = c.total > 0
+      ? yen(c.each)
+      : '—<small>会計時に表示</small>';
 
     var body = document.getElementById("collectbody");
     body.textContent = "";
