@@ -94,97 +94,6 @@
         border:0;background:var(--ball);color:#12261F;cursor:pointer}
   #gate .err{color:#F5B7A6;font-size:12.5px;min-height:1.6em;margin-top:12px}
   body.locked{overflow:hidden}
-  .passover{position:fixed;inset:0;z-index:110;background:var(--court);color:#EAF2EC;
-        display:grid;place-items:center;padding:24px;text-align:center}
-  .passover .box{max-width:320px;width:100%}
-  .passover h2{font-size:17px;font-weight:600;font-family:"Shippori Mincho","Yu Mincho",serif}
-  .passover p{font-size:12.5px;color:#A9C3B4;margin:8px 0 20px;line-height:1.7}
-  .passover .row{display:flex;gap:8px;justify-content:center}
-  .passover input{font-family:"Roboto Mono",monospace;font-size:22px;letter-spacing:.3em;text-align:center;
-        width:140px;padding:10px 0 10px .3em;border-radius:10px;border:1px solid rgba(255,255,255,.28);
-        background:rgba(0,0,0,.22);color:#fff}
-  .passover input:focus-visible{outline:2px solid var(--ball);outline-offset:2px}
-  .passover button{font:inherit;font-weight:700;font-size:14px;padding:10px 18px;border-radius:10px;
-        border:0;background:var(--ball);color:#12261F;cursor:pointer}
-  .passover .cancel{background:transparent;color:#A9C3B4;border:1px solid rgba(255,255,255,.28);font-weight:500}
-  .passover .err{color:#F5B7A6;font-size:12.5px;min-height:1.6em;margin-top:12px}
-  .nojs{background:var(--warn-soft);border:1px solid var(--warn);border-radius:10px;
-        padding:12px 14px;margin-top:16px;font-size:13px}
-
-  /* ---------- hero ---------- */
-  .hero{position:relative;margin-inline:-16px;padding:28px 16px 24px;overflow:hidden;
-        background:var(--court);color:#EAF2EC}
-  .hero svg.court{position:absolute;inset:0;width:100%;height:100%;opacity:.42}
-  .hero .inner{position:relative}
-  .hero .kicker{font-size:10.5px;letter-spacing:.2em;color:#A9C3B4;font-weight:700}
-  .stampline{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:14px}
-  .stampline .d{font-family:"Roboto Mono",monospace;font-weight:700;font-size:clamp(46px,15vw,82px);
-        line-height:.84;letter-spacing:-.05em}
-  .stampline .d em{font-style:normal;color:var(--ball)}
-  .stampline .side{padding-bottom:5px}
-  .stampline .side .y{font-family:"Roboto Mono",monospace;font-size:13px;color:#A9C3B4;letter-spacing:.14em}
-  .stampline .side .t{font-weight:700;font-size:16px;margin-top:2px}
-  .hero h1{font-size:17px;font-weight:700;margin-top:18px}
-  .hero .venue{font-size:13.5px;color:#A9C3B4;margin-top:2px}
-  .hero .dday{position:absolute;right:0;top:2px;text-align:right}
-  .hero .dday .n{font-family:"Roboto Mono",monospace;font-size:30px;font-weight:700;line-height:1;color:var(--ball)}
-  .hero .dday .l{font-size:10px;letter-spacing:.14em;color:#A9C3B4}
-
-  /* ---------- tabs ---------- */
-  .tabs{position:sticky;top:env(safe-area-inset-top, 0px);z-index:20;background:var(--bg);
-        display:flex;gap:2px;padding-block:10px 0;border-bottom:1px solid var(--line);overflow-x:auto}
-  .tabs::-webkit-scrollbar{display:none}
-  .tabs button{appearance:none;background:none;border:0;border-bottom:2px solid transparent;
-        font:inherit;font-weight:500;color:var(--ink-3);padding:8px 12px;cursor:pointer;white-space:nowrap}
-  .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
-  .tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-
-  .strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
-         border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:14px}
-  .strip div{background:var(--surface);padding:10px 12px}
-  .strip .k{font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);font-weight:700}
-  .strip .v{font-family:"Roboto Mono",monospace;font-size:19px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.35}
-  .strip .v small{font-family:"Noto Sans JP",sans-serif;font-size:11px;color:var(--ink-3);margin-left:2px}
-
-  section[hidden]{display:none!important}
-  .panel{padding-block:22px}
-  h2.sec{font-size:15px;letter-spacing:.02em;display:flex;align-items:baseline;gap:10px;margin-block:26px 10px}
-  .panel > h2.sec:first-child{margin-top:18px}
-  h2.sec .n{font-family:"Roboto Mono",monospace;font-size:11px;color:var(--accent);font-weight:500}
-  .hint{font-size:12.5px;color:var(--ink-2);margin:0 0 12px}
-  .empty{font-size:13px;color:var(--ink-3);padding:18px 0;text-align:center;border:1px dashed var(--line-strong);border-radius:12px}
-
-  /* ---------- facts ---------- */
-  dl.facts{margin:0;display:grid;grid-template-columns:5.5em 1fr;align-items:baseline;
-        background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 16px}
-  dl.facts dt{color:var(--ink-3);font-size:12.5px;padding:10px 0;border-bottom:1px solid var(--line)}
-  dl.facts dd{margin:0;padding:10px 0;font-size:14.5px;border-bottom:1px solid var(--line)}
-  dl.facts dt:last-of-type,dl.facts dd:last-of-type{border-bottom:0}
-
-  /* ---------- timeline ---------- */
-  .rail{display:flex;gap:0;margin-top:14px;overflow-x:auto;padding-bottom:2px}
-  .rail .stop{flex:1 0 auto;min-width:88px;border-top:2px solid var(--line-strong);padding-top:8px;padding-right:12px;position:relative}
-  .rail .stop::before{content:"";position:absolute;top:-5px;left:0;width:8px;height:8px;border-radius:50%;background:var(--line-strong)}
-  .rail .stop.key{border-top-color:var(--accent)}
-  .rail .stop.key::before{background:var(--accent)}
-  .rail .t{font-family:"Roboto Mono",monospace;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
-  .rail .l{font-size:11px;color:var(--ink-2);line-height:1.5}
-
-  /* ---------- countdown ---------- */
-  .cds{display:grid;gap:8px;margin-top:6px}
-  .cd{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);
-      border-radius:12px;padding:11px 14px}
-  .cd .lab{font-size:13.5px;font-weight:500;min-width:0}
-  .cd .lab small{display:block;font-size:11px;color:var(--ink-3);font-weight:400}
-  .cd .rest{margin-left:auto;text-align:right;white-space:nowrap}
-  .cd .rest b{font-family:"Roboto Mono",monospace;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
-  .cd .rest span{font-size:11px;color:var(--ink-3);margin-left:3px}
-  .cd.soon{border-color:var(--warn)}
-  .cd.soon .rest b{color:var(--warn)}
-  .cd.past{opacity:.5}
-  .cd input[type="date"]{font:inherit;font-size:12px;padding:4px 6px;border-radius:7px;
-      border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
-
   /* ---------- 出欠フォーム ---------- */
   .formwrap{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
   .formwrap iframe{display:block;width:100%;height:78vh;min-height:520px;max-height:900px;border:0;background:var(--surface)}
@@ -681,7 +590,6 @@
   });
 
   var PASS = "760";
-  var STAFF_PASS = "7603";   // 幹事メニュー用（メンバー用の760とは別）
   var IS_ARTIFACT = !!(window.claude && typeof window.claude.use === "function");
   var GKEY = "obkai2027:gate";
   function openGate(){
@@ -1320,33 +1228,6 @@
     }
   }
 
-  function askPass(title, desc, expect, ok){
-    var ov = el("div","passover");
-    var box = el("div","box");
-    box.appendChild(el("h2",null,title));
-    box.appendChild(el("p",null,desc));
-    var form = document.createElement("form");
-    form.className = "row";
-    var inp = el("input");
-    inp.type = "text"; inp.inputMode = "numeric"; inp.maxLength = 8;
-    inp.setAttribute("aria-label", title); inp.placeholder = "____";
-    var go = el("button",null,"開く"); go.type = "submit";
-    var no = el("button","cancel","戻る"); no.type = "button";
-    form.appendChild(inp); form.appendChild(go); form.appendChild(no);
-    box.appendChild(form);
-    var err = el("div","err"); err.setAttribute("role","status");
-    box.appendChild(err);
-    ov.appendChild(box);
-    document.body.appendChild(ov);
-    setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 60);
-    no.onclick = function(){ ov.remove(); };
-    form.onsubmit = function(ev){
-      ev.preventDefault();
-      if(inp.value.trim() === expect){ ov.remove(); ok(); }
-      else { err.textContent = "違うようです。"; inp.value = ""; inp.focus(); }
-    };
-  }
-
   function syncSound(){
     var b = document.getElementById("soundtoggle"), on = soundOn();
     b.setAttribute("aria-pressed", on ? "true" : "false");
@@ -1450,16 +1331,8 @@
     }
   }
   document.getElementById("stafftoggle").onclick = function(){
-    if(staffOn()){                       // 解除は合言葉なし
-      try{ localStorage.setItem(SKEY, "0"); }catch(e){}
-      applyStaff();
-      return;
-    }
-    askPass("会計（幹事用）", "当日の伝票を人数で割る画面です。幹事用の合言葉を入れてください。",
-      STAFF_PASS, function(){
-        try{ localStorage.setItem(SKEY, "1"); }catch(e){}
-        applyStaff();
-      });
+    try{ localStorage.setItem(SKEY, staffOn() ? "0" : "1"); }catch(e){}
+    applyStaff();
   };
 
   function showTab(id){
