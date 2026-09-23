@@ -432,10 +432,10 @@
 <div id="gate" hidden>
   <div class="box">
     <div class="ball" aria-hidden="true"></div>
-    <h2 class="mincho">合言葉をどうぞ</h2>
+    <h2 class="mincho">パスワードをどうぞ</h2>
     <p>テニス部同窓会の関係者ページです。<br>案内に書かれている3桁の数字を入れてください。</p>
     <form class="row" id="gateform">
-      <input id="gatepass" type="text" inputmode="numeric" autocomplete="off" maxlength="6" aria-label="合言葉" placeholder="___">
+      <input id="gatepass" type="text" inputmode="numeric" autocomplete="off" maxlength="6" aria-label="パスワード" placeholder="___">
       <button type="submit">開く</button>
     </form>
     <div class="err" id="gateerr" role="status"></div>
@@ -701,7 +701,7 @@
 (function(){
   "use strict";
 
-  /* ========== 合言葉（このページが素の静的HTMLとして置かれている時だけ） ========== */
+  /* ========== パスワード（このページが素の静的HTMLとして置かれている時だけ） ========== */
   // 何か例外が出ても白画面にしない安全弁
   window.addEventListener("error", function(){
     try{
@@ -733,7 +733,7 @@
     });
   }
   (function(){
-    if(IS_ARTIFACT) return;              // Artifact版は共有設定で守られているので合言葉なし
+    if(IS_ARTIFACT) return;              // Artifact版は共有設定で守られているのでパスワードなし
     var ok = false;
     try{ ok = localStorage.getItem(GKEY) === "1"; }catch(e){}
     if(!ok) openGate();
