@@ -286,45 +286,6 @@
   .task.done label{color:var(--ink-3);text-decoration:line-through}
   .task.done label small{text-decoration:none}
 
-  /* ---------- roster ---------- */
-  .roster{border-top:1px solid var(--line-strong)}
-  .prow{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:start}
-  .prow .who{min-width:0}
-  .prow .nm{font-weight:500;font-size:15px;word-break:break-word}
-  .prow .nt{font-size:11.5px;color:var(--ink-3);line-height:1.5}
-  .prow .acts{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;align-items:center}
-  .prow.out .nm,.prow.out .nt{opacity:.45}
-
-  .chip{appearance:none;font:inherit;font-size:12px;font-weight:500;line-height:1;
-        padding:6px 10px;border-radius:999px;border:1px solid var(--line-strong);
-        background:var(--surface);color:var(--ink-2);cursor:pointer;white-space:nowrap}
-  .chip:hover{border-color:var(--ink-3)}
-  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
-  .chip.ghost[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
-  .chip.x{border-color:transparent;color:var(--ink-3);padding:6px 8px}
-  .chip.x:hover{color:var(--alert);border-color:var(--alert)}
-  select.mini,input.mini{font:inherit;font-size:12px;padding:5px 8px;border-radius:8px;
-        border:1px solid var(--line-strong);background:var(--surface);color:var(--ink)}
-  select.mini:focus-visible,input.mini:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-
-  .rsvp{display:inline-flex;border:1px solid var(--line-strong);border-radius:999px;overflow:hidden}
-  .rsvp button{appearance:none;background:var(--surface);border:0;border-right:1px solid var(--line-strong);
-        font:inherit;font-size:12px;font-weight:500;color:var(--ink-3);padding:6px 9px;cursor:pointer;line-height:1}
-  .rsvp button:last-child{border-right:0}
-  .rsvp button[data-v="yes"][aria-pressed="true"]{background:var(--accent);color:var(--bg)}
-  .rsvp button[data-v="maybe"][aria-pressed="true"]{background:var(--warn);color:var(--bg)}
-  .rsvp button[data-v="no"][aria-pressed="true"]{background:var(--ink-3);color:var(--bg)}
-
-  .addrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-  .addrow input{flex:1 1 150px;min-width:0;font:inherit;font-size:14px;padding:9px 12px;border-radius:9px;
-        border:1px solid var(--line-strong);background:var(--surface);color:var(--ink)}
-  .addrow input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-  .btn{appearance:none;font:inherit;font-size:13px;font-weight:700;padding:9px 16px;border-radius:9px;
-       border:1px solid var(--accent);background:var(--accent);color:var(--bg);cursor:pointer;white-space:nowrap}
-  .btn.sub{background:var(--surface);color:var(--ink-2);border-color:var(--line-strong);font-weight:500}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-
   /* ---------- total input ---------- */
   .totalin{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line-strong);
         border-radius:12px;padding:10px 18px;margin-top:12px}
@@ -335,24 +296,22 @@
   .totalin input:focus{outline:none}
   .totalin:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 
-  /* ---------- orders ---------- */
-  .presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-  .orders{border-top:1px solid var(--line-strong)}
-  .ohead,.orow{display:grid;grid-template-columns:1fr 92px 58px 92px 32px;gap:8px;align-items:center;
-        padding:7px 0;border-bottom:1px solid var(--line)}
-  .ohead{font-size:10.5px;letter-spacing:.08em;color:var(--ink-3);font-weight:700;padding-bottom:6px}
-  .ohead span:nth-child(n+2){text-align:right}
-  .orow input[type="text"],.orow input[type="number"]{
-        font:inherit;font-size:14px;width:100%;min-width:0;padding:7px 9px;border-radius:8px;
-        border:1px solid var(--line);background:var(--surface-2);color:var(--ink)}
-  .orow input[type="number"]{font-family:"Roboto Mono",monospace;text-align:right;font-variant-numeric:tabular-nums}
-  .orow input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;background:var(--surface)}
-  .orow .sum{font-family:"Roboto Mono",monospace;text-align:right;font-variant-numeric:tabular-nums;font-size:14px}
-  .orow.issample input[type="text"]{border-style:dashed;color:var(--ink-2)}
-  .orow.issample .sum{color:var(--ink-3)}
-  .otot{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;gap:12px}
-  .otot .lbl{font-size:12px;color:var(--ink-2);font-weight:500}
-  .otot .val{font-family:"Roboto Mono",monospace;font-size:22px;font-variant-numeric:tabular-nums}
+  /* ---------- 人数カウンター ---------- */
+  .counts{display:grid;gap:8px;margin-top:12px}
+  .crow{display:flex;align-items:center;gap:12px;background:var(--surface);
+        border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+  .crow .lab{font-size:14px;font-weight:500;min-width:0}
+  .crow .lab small{display:block;font-size:11px;color:var(--ink-3);font-weight:400}
+  .crow .st{margin-left:auto;display:flex;align-items:center;gap:4px}
+  .crow button{appearance:none;width:38px;height:38px;border-radius:10px;
+        border:1px solid var(--line-strong);background:var(--surface-2);color:var(--ink);
+        font-size:19px;line-height:1;cursor:pointer;font-family:"Roboto Mono",monospace}
+  .crow button:hover{border-color:var(--accent);color:var(--accent)}
+  .crow button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .crow button:disabled{opacity:.35;cursor:default}
+  .crow .n{font-family:"Roboto Mono",monospace;font-size:21px;font-weight:700;
+        font-variant-numeric:tabular-nums;min-width:2.6em;text-align:center}
+  .crow .of{font-size:12px;color:var(--ink-3);font-family:"Roboto Mono",monospace}
 
   .band{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
         border-radius:4px 12px 12px 4px;padding:18px 20px;box-shadow:var(--shadow);margin-top:16px}
@@ -478,7 +437,6 @@
   <nav class="tabs" role="tablist" aria-label="画面切替">
     <button id="tab-info"   role="tab" aria-selected="true"  aria-controls="p-info">概要</button>
     <button id="tab-prep"   role="tab" aria-selected="false" aria-controls="p-prep">準備</button>
-    <button id="tab-people" role="tab" aria-selected="false" aria-controls="p-people">参加</button>
     <button id="tab-money"  role="tab" aria-selected="false" aria-controls="p-money">会計</button>
     <button id="tab-venue"  role="tab" aria-selected="false" aria-controls="p-venue">お店</button>
     <button class="stafftoggle" id="stafftoggle" type="button" hidden>幹事メニュー</button>
@@ -486,9 +444,9 @@
   </nav>
 
   <div class="strip" id="strip">
-    <div><div class="k">割り勘の対象</div><div class="v" id="s-ichi">—</div></div>
-    <div><div class="k">2次会へ</div><div class="v" id="s-ni">—</div></div>
-    <div><div class="k">1人あたり</div><div class="v" id="s-each">—</div></div>
+    <div><div class="k">その場の人数</div><div class="v" id="s-heads">—</div></div>
+    <div><div class="k">通常</div><div class="v" id="s-full">—</div></div>
+    <div><div class="k">6割</div><div class="v" id="s-sixty">—</div></div>
   </div>
 
   <!-- ============ 概要 ============ -->
@@ -598,53 +556,43 @@
       </label>
       <label>押さえた人数 <input class="mini mono" id="yoyaku-n" type="number" min="0" step="1" inputmode="numeric" style="width:76px"></label>
     </div>
+    <p class="hint" style="margin:10px 0 0">フォームの回答画面に出ている件数を写してください。</p>
+    <div class="opts" style="margin-top:6px;margin-bottom:12px">
+      <label>1次会 参加 <input class="mini mono" id="cnt-yes" type="number" min="0" step="1" inputmode="numeric" style="width:70px"></label>
+      <label>未定 <input class="mini mono" id="cnt-maybe" type="number" min="0" step="1" inputmode="numeric" style="width:70px"></label>
+      <label>2次会 参加 <input class="mini mono" id="cnt-ni" type="number" min="0" step="1" inputmode="numeric" style="width:70px"></label>
+    </div>
     <div class="gapbar" id="gapbar"></div>
     <div class="note" id="gapnote"></div>
     <p class="hint" style="margin-top:12px"><b>どんがめのキャンセル規定（確認済み）</b>　減員も全キャンセルも、事前に伝えれば問題なしとのこと。日数の縛りはありません。ただし<b>12月に入った時点で概数を伝えると約束している</b>ので、そこだけは守る前提で動きます。</p>
   </section>
 
-  <!-- ============ 参加 ============ -->
-  <section class="panel" id="p-people" role="tabpanel" aria-labelledby="tab-people" hidden>
-    <h2 class="sec"><span class="n">01</span>参加者</h2>
-    <p class="hint">左が事前回答（○参加／△未定／×欠席）、右が当日の実参加。<b>1次</b>・<b>2次</b>のトグルがそのまま割り勘の頭数になります。<b>名前はこのページのソースには含まれません</b>——入力した内容だけが保存されます。</p>
-    <div class="note" id="localnote" hidden></div>
-    <div class="roster" id="roster"></div>
-    <div class="empty" id="roster-empty" hidden>まだ誰も登録されていません。下の欄から追加してください。</div>
-    <form class="addrow" id="addform">
-      <input id="add-name" type="text" placeholder="名前" autocomplete="off">
-      <input id="add-note" type="text" placeholder="備考（任意）" autocomplete="off">
-      <button class="btn" type="submit">追加</button>
-    </form>
-
-    <h2 class="sec"><span class="n">02</span>まとめて取り込む</h2>
-    <p class="hint">Googleフォームの回答やLINEの名簿を貼り付けて一括登録できます。1行1名。<code>名前,備考</code> のようにカンマかタブで区切ると備考も入ります。</p>
-    <textarea id="bulk" rows="4" placeholder="山田,3年&#10;佐藤" style="width:100%;font:inherit;font-size:14px;padding:10px 12px;border-radius:9px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink)"></textarea>
-    <div class="opts"><button class="btn sub" type="button" id="bulk-go">取り込む</button><span id="bulk-msg"></span></div>
-
-    <h2 class="sec"><span class="n">03</span>負担区分</h2>
-    <p class="hint">各行のセレクトで <b>通常 / 6割（女性） / 半額 / 招待（0円）</b> を選べます。<b>女性は6割、先生は招待</b>で運用します。減額・招待で浮いた分は通常区分のメンバーで按分されるため、割引する人数が増えるほど通常の1人あたりが上がります。<b>割引をやるなら当日の会計前に宣言しておく</b>のが揉めないコツです。</p>
-  </section>
-
   <!-- ============ 会計 ============ -->
   <section class="panel" id="p-money" role="tabpanel" aria-labelledby="tab-money" hidden>
-    <p class="hint" style="margin-bottom:0"><b>先に「参加」タブでその場にいる人を登録してください。</b>1次会のトグルがオンの人が割り勘の対象になります。</p>
     <h2 class="sec"><span class="n">01</span>1次会の総額</h2>
-    <p class="hint">会計時に、<b>伝票の合計金額だけ</b>入れてください。あとは人数で割ります。</p>
+    <p class="hint">会計時に、<b>伝票の合計金額だけ</b>入れてください。</p>
     <div class="totalin">
       <span class="cur">¥</span>
       <input id="total" type="number" min="0" step="1" inputmode="numeric" placeholder="0" aria-label="1次会の総額">
     </div>
-    <p class="hint" style="margin-top:10px">2次会に移った場合は、店ごとにその場で精算するか、ここを2次会の総額に入れ替えて計算し直してください。</p>
 
-    <h2 class="sec"><span class="n">02</span>割り勘</h2>
+    <h2 class="sec"><span class="n">02</span>その場の人数</h2>
+    <p class="hint">テーブルにいる人を数えて入れてください。<b>ここの合計と実際の人数が合っていれば請求漏れは起きません。</b></p>
+    <div class="counts" id="counts"></div>
+
+    <h2 class="sec"><span class="n">03</span>ひとりあたり</h2>
     <div class="band">
       <div class="lead">
-        <div class="big" id="per-each">¥0</div>
-        <div class="cap" id="per-cap">通常区分ひとりあたり</div>
+        <div class="big" id="per-full">—</div>
+        <div class="cap">通常</div>
+      </div>
+      <div class="lead" style="margin-top:8px">
+        <div class="big" id="per-sixty" style="font-size:28px">—</div>
+        <div class="cap">6割（女性）</div>
       </div>
       <div class="meta">
         <span>総額 <b id="m-total">¥0</b></span>
-        <span>頭数 <b id="m-heads">0</b> 名（課金単位 <b id="m-units">0</b>）</span>
+        <span>その場 <b id="m-heads">0</b> 名</span>
         <span>集金合計 <b id="m-collect">¥0</b></span>
         <span id="m-gapwrap">過不足 <b id="m-gap">¥0</b></span>
       </div>
@@ -652,8 +600,8 @@
     <div class="opts">
       <label>端数
         <select class="mini" id="roundunit">
-          <option value="100">100円単位</option><option value="500">500円単位</option>
-          <option value="1000">1000円単位</option><option value="1">1円単位</option>
+          <option value="1">1円単位</option><option value="100">100円単位</option>
+          <option value="500">500円単位</option><option value="1000">1000円単位</option>
         </select>
       </label>
       <label>丸め
@@ -663,20 +611,10 @@
       </label>
     </div>
 
-    <h2 class="sec"><span class="n">03</span>集金チェック</h2>
-    <p class="hint">受け取った人をタップして消し込み。<b>その場にいる人数と「集金対象」の人数が一致しているか</b>を先に確かめてください。ここがずれていると請求漏れになります。</p>
+    <h2 class="sec"><span class="n">04</span>集金</h2>
+    <p class="hint">受け取るたびに＋を押してください。残り人数と残額が出ます。</p>
+    <div class="counts" id="paidcounts"></div>
     <div id="collectstatus"></div>
-    <div class="opts" style="margin-top:10px">
-      <button class="btn sub" type="button" id="onlyunpaid">未回収だけ表示</button>
-      <span class="hint" style="margin:0" id="collectcount">—</span>
-    </div>
-    <div class="tscroll">
-      <table class="collect">
-        <thead><tr><th>名前</th><th>区分</th><th class="r">金額</th><th class="r">受領</th></tr></thead>
-        <tbody id="collectbody"></tbody>
-        <tfoot><tr><td colspan="2">未回収</td><td class="r amt" id="c-left">¥0</td><td class="r" id="c-leftn">0名</td></tr></tfoot>
-      </table>
-    </div>
   </section>
 
   <!-- ============ お店 ============ -->
@@ -803,8 +741,11 @@
      note:"評価4.8・日本酒充実。お座敷は10名まで"}
   ];
   var CHECK_LABELS = {jan3:"1/3営業", enter:"移動時刻に入店可", out:"解散時刻までOK", seats:"人数分の席"};
-  var RATES = {full:{label:"通常", w:1}, p60:{label:"6割（女性）", w:0.6}, half:{label:"半額", w:0.5}, free:{label:"招待", w:0}};
-  function rateOf(p){ return RATES[p.rate] || RATES.full; }
+  var GROUPS = [
+    {key:"full",  label:"通常",   sub:"男性・そのほか", w:1},
+    {key:"sixty", label:"6割",    sub:"女性",           w:0.6},
+    {key:"free",  label:"招待",   sub:"顧問の先生",     w:0}
+  ];
 
   var TASKS = [
     {ph:"10月〜11月上旬", id:"t03", t:"どんがめ：1/3のハッピーアワー実施可否", s:"実施されるなら単品会計で確定できる"},
@@ -844,16 +785,17 @@
   ];
 
   var DEFAULTS = {
-    roster:  {people: [], updatedAt:null},
-    billing: {total:null, roundUnit:100, roundMode:"up", updatedAt:null},
+    billing: {total:null, nFull:0, nSixty:0, nFree:0, pFull:0, pSixty:0,
+              roundUnit:1, roundMode:"up", updatedAt:null},
     nijikai: {moveAt:"15:00", endAt:"18:00", chosen:null, checks:{}, updatedAt:null},
     prep:    {done:{}, callBy:"2026-11-05", roughBy:"2026-12-05", rsvpBy:"2026-12-23", finalBy:"2026-12-26",
-              eventAt:"2027-01-03", yoyakuSt:"done", yoyakuN:20, updatedAt:null}
+              eventAt:"2027-01-03", yoyakuSt:"done", yoyakuN:20,
+              cntYes:0, cntMaybe:0, cntNi:0, updatedAt:null}
   };
   var state = JSON.parse(JSON.stringify(DEFAULTS));
 
   /* ========== 保存層（Artifactならdb同期・静的ならこの端末） ========== */
-  var DOCS = ["roster","billing","nijikai","prep"];
+  var DOCS = ["billing","nijikai","prep"];
   var LSKEY = "obkai2027:";
   var db = null, dbWritable = true, lastEdit = 0, timers = {};
 
@@ -865,7 +807,7 @@
     return d.getFullYear()+"/"+p(d.getMonth()+1)+"/"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes());
   }
   function showUpdated(){
-    var t = state.roster.updatedAt || state.billing.updatedAt || state.nijikai.updatedAt || state.prep.updatedAt;
+    var t = state.billing.updatedAt || state.nijikai.updatedAt || state.prep.updatedAt;
     document.getElementById("updated").textContent = t || "—";
   }
   function save(which){
@@ -923,7 +865,6 @@
     var t = state.billing.total;
     return (t === null || t === "" || isNaN(t)) ? 0 : Number(t);
   }
-  function attendees(){ return state.roster.people.filter(function(p){ return p.ichi; }); }
   function roundTo(v, unit, mode){
     if(!isFinite(v)) return 0;
     if(unit <= 1) return Math.round(v);
@@ -932,17 +873,26 @@
     return Math.ceil(v/unit)*unit;
   }
   function compute(){
-    var total = billTotal(), list = attendees();
-    var units = list.reduce(function(a,p){ return a + rateOf(p).w; }, 0);
-    var perUnit = units > 0 ? total/units : 0;
-    var rows = list.map(function(p){
-      return {p:p, amount: rateOf(p).w === 0 ? 0 : roundTo(perUnit*rateOf(p).w, Number(state.billing.roundUnit), state.billing.roundMode)};
-    });
-    var collect = rows.reduce(function(a,r){ return a + r.amount; },0);
-    return {total:total, heads:list.length, units:units,
-            each: roundTo(perUnit, Number(state.billing.roundUnit), state.billing.roundMode),
-            rows:rows, collect:collect, gap: collect - total};
+    var b = state.billing;
+    var total = billTotal();
+    var nF = Math.max(0, Number(b.nFull)  || 0);
+    var nS = Math.max(0, Number(b.nSixty) || 0);
+    var nZ = Math.max(0, Number(b.nFree)  || 0);
+    var units = nF + nS * 0.6;
+    var perUnit = units > 0 ? total / units : 0;
+    var unit = Number(b.roundUnit), mode = b.roundMode;
+    var aF = units > 0 ? roundTo(perUnit, unit, mode) : 0;
+    var aS = units > 0 ? roundTo(perUnit * 0.6, unit, mode) : 0;
+    var collect = aF * nF + aS * nS;
+    var pF = Math.min(nF, Math.max(0, Number(b.pFull)  || 0));
+    var pS = Math.min(nS, Math.max(0, Number(b.pSixty) || 0));
+    var received = aF * pF + aS * pS;
+    return {total:total, nF:nF, nS:nS, nZ:nZ, heads:nF + nS + nZ, units:units,
+            aF:aF, aS:aS, collect:collect, gap:collect - total,
+            pF:pF, pS:pS, received:received, left:collect - received,
+            leftN:(nF - pF) + (nS - pS)};
   }
+
   function el(tag, cls, txt){
     var e = document.createElement(tag);
     if(cls) e.className = cls;
@@ -1014,10 +964,13 @@
   function renderYoyaku(){
     document.getElementById("yoyaku-st").value = state.prep.yoyakuSt;
     document.getElementById("yoyaku-n").value = state.prep.yoyakuN;
+    document.getElementById("cnt-yes").value   = state.prep.cntYes;
+    document.getElementById("cnt-maybe").value = state.prep.cntMaybe;
+    document.getElementById("cnt-ni").value    = state.prep.cntNi;
 
     var booked = Number(state.prep.yoyakuN) || 0;
-    var yes   = state.roster.people.filter(function(p){ return p.rsvp === "yes"; }).length;
-    var maybe = state.roster.people.filter(function(p){ return p.rsvp === "maybe"; }).length;
+    var yes    = Math.max(0, Number(state.prep.cntYes)   || 0);
+    var maybe  = Math.max(0, Number(state.prep.cntMaybe) || 0);
     var likely = yes + maybe;
     var labels = {none:"未予約", tmp:"仮予約", done:"予約済"};
 
@@ -1072,212 +1025,112 @@
         "席が足りません。早めにどんがめへ増席を連絡してください。";
     }
   }
-  ["yoyaku-st","yoyaku-n"].forEach(function(id){
+  ["yoyaku-st","yoyaku-n","cnt-yes","cnt-maybe","cnt-ni"].forEach(function(id){
     document.getElementById(id).onchange = function(){
       state.prep.yoyakuSt = document.getElementById("yoyaku-st").value;
       state.prep.yoyakuN  = document.getElementById("yoyaku-n").value;
-      save("prep"); renderYoyaku();
+      state.prep.cntYes   = document.getElementById("cnt-yes").value;
+      state.prep.cntMaybe = document.getElementById("cnt-maybe").value;
+      state.prep.cntNi    = document.getElementById("cnt-ni").value;
+      save("prep"); renderYoyaku(); renderVenues();
     };
   });
 
-  /* ========== 参加者 ========== */
-  function renderRoster(){
-    var ln = document.getElementById("localnote");
-    if(ln){
-      ln.hidden = IS_ARTIFACT;
-      if(!IS_ARTIFACT && !ln.innerHTML){
-        ln.innerHTML = "<b>この名簿はこの端末にだけ保存されます。</b>" +
-          "他の端末とは共有されません。当日この端末で会計をするなら、" +
-          "あらかじめここに参加者を登録しておいてください。";
-      }
-    }
-    var host = document.getElementById("roster");
-    host.textContent = "";
-    document.getElementById("roster-empty").hidden = state.roster.people.length > 0;
-    state.roster.people.forEach(function(p){
-      var row = el("div", "prow" + (p.rsvp === "no" ? " out" : ""));
-      var who = el("div","who");
-      who.appendChild(el("div","nm",p.name));
-      if(p.note) who.appendChild(el("div","nt",p.note));
-      row.appendChild(who);
-
-      var acts = el("div","acts");
-      var rs = el("div","rsvp");
-      [["yes","○"],["maybe","△"],["no","×"]].forEach(function(o){
-        var b = el("button",null,o[1]);
-        b.type = "button"; b.dataset.v = o[0];
-        b.setAttribute("aria-pressed", p.rsvp === o[0] ? "true" : "false");
-        b.setAttribute("aria-label", p.name + " 事前回答 " + o[1]);
-        b.onclick = function(){
-          p.rsvp = o[0];
-          if(o[0] === "no"){ p.ichi = false; p.ni = false; }
-          if(o[0] === "yes"){ p.ichi = true; }
-          save("roster"); renderAll();
-        };
-        rs.appendChild(b);
-      });
-      acts.appendChild(rs);
-
-      [["ichi","1次"],["ni","2次"]].forEach(function(o){
-        var b = el("button","chip ghost",o[1]);
-        b.type = "button";
-        b.setAttribute("aria-pressed", p[o[0]] ? "true" : "false");
-        b.setAttribute("aria-label", p.name + " " + o[1] + "会参加");
-        b.onclick = function(){ p[o[0]] = !p[o[0]]; save("roster"); renderAll(); };
-        acts.appendChild(b);
-      });
-
-      var sel = el("select","mini");
-      sel.setAttribute("aria-label", p.name + " 負担区分");
-      Object.keys(RATES).forEach(function(k){
-        var op = el("option",null,RATES[k].label);
-        op.value = k; if(p.rate === k) op.selected = true;
-        sel.appendChild(op);
-      });
-      sel.onchange = function(){ p.rate = sel.value; save("roster"); renderAll(); };
-      acts.appendChild(sel);
-
-      var del = el("button","chip x","削除");
-      del.type = "button";
-      del.setAttribute("aria-label", p.name + " を削除");
-      del.onclick = function(){
-        state.roster.people = state.roster.people.filter(function(q){ return q.id !== p.id; });
-        save("roster"); renderAll();
-      };
-      acts.appendChild(del);
-      row.appendChild(acts);
-      host.appendChild(row);
-    });
-  }
-
-  function addPerson(name, note){
-    state.roster.people.push({
-      id:"p" + Date.now().toString(36) + Math.random().toString(36).slice(2,5),
-      name:name, note:note || "", rsvp:"maybe", ichi:true, ni:false, rate:"full", paid:false
-    });
-  }
-  document.getElementById("addform").addEventListener("submit", function(ev){
-    ev.preventDefault();
-    var n = document.getElementById("add-name"), t = document.getElementById("add-note");
-    var name = n.value.trim();
-    if(!name) return;
-    addPerson(name, t.value.trim());
-    n.value = ""; t.value = "";
-    save("roster"); renderAll(); n.focus();
-  });
-  document.getElementById("bulk-go").onclick = function(){
-    var ta = document.getElementById("bulk");
-    var lines = ta.value.split(/\r?\n/).map(function(s){ return s.trim(); }).filter(Boolean);
-    var added = 0;
-    lines.forEach(function(line){
-      var parts = line.split(/[,\t]/);
-      var nm = (parts[0]||"").trim();
-      if(!nm) return;
-      var dup = state.roster.people.some(function(p){ return p.name === nm; });
-      if(dup) return;
-      addPerson(nm, (parts[1]||"").trim());
-      added++;
-    });
-    ta.value = "";
-    document.getElementById("bulk-msg").textContent = added + "名を追加しました" + (lines.length > added ? "（重複・空行はスキップ）" : "");
-    save("roster"); renderAll();
-  };
-
-  document.getElementById("total").oninput = function(){
-    var v = this.value.trim();
-    state.billing.total = v === "" ? null : Number(v);
-    save("billing"); renderMoney();
-  };
-  document.getElementById("roundunit").onchange = function(){ state.billing.roundUnit = Number(this.value); save("billing"); renderMoney(); };
-  document.getElementById("roundmode").onchange = function(){ state.billing.roundMode = this.value; save("billing"); renderMoney(); };
-
   /* ========== お金 ========== */
-  var onlyUnpaid = false;
-  document.getElementById("onlyunpaid").onclick = function(){
-    onlyUnpaid = !onlyUnpaid;
-    this.textContent = onlyUnpaid ? "全員を表示" : "未回収だけ表示";
-    renderMoney();
-  };
+  function stepper(host, label, sub, get, set, maxGet){
+    var row = el("div","crow");
+    var lab = el("div","lab");
+    lab.appendChild(document.createTextNode(label));
+    if(sub) lab.appendChild(el("small", null, sub));
+    row.appendChild(lab);
+    var st = el("div","st");
+    var minus = el("button", null, "−");
+    var num = el("div","n", String(get()));
+    var plus = el("button", null, "+");
+    minus.type = plus.type = "button";
+    minus.setAttribute("aria-label", label + " を1減らす");
+    plus.setAttribute("aria-label", label + " を1増やす");
+    minus.disabled = get() <= 0;
+    if(maxGet) plus.disabled = get() >= maxGet();
+    minus.onclick = function(){ set(Math.max(0, get() - 1)); };
+    plus.onclick  = function(){ set(get() + (maxGet && get() >= maxGet() ? 0 : 1)); };
+    st.appendChild(minus); st.appendChild(num); st.appendChild(plus);
+    if(maxGet){ st.appendChild(el("span","of", "/ " + maxGet())); }
+    row.appendChild(st);
+    host.appendChild(row);
+  }
+
+  function setCount(key, v){
+    state.billing[key] = v;
+    if(key === "nFull"  && state.billing.pFull  > v) state.billing.pFull  = v;
+    if(key === "nSixty" && state.billing.pSixty > v) state.billing.pSixty = v;
+    save("billing"); renderMoney();
+  }
 
   function renderMoney(){
     var c = compute();
-    document.getElementById("per-each").textContent = yen(c.each);
-    document.getElementById("per-cap").textContent = c.units > 0
-      ? "通常区分ひとりあたり（" + state.billing.roundUnit + "円" +
-        ({up:"切り上げ",near:"四捨五入",down:"切り捨て"}[state.billing.roundMode]) + "）"
-      : "「参加」タブで1次会に出る人のトグルをオンにしてください";
-    document.getElementById("m-total").textContent = yen(c.total);
-    document.getElementById("m-heads").textContent = c.heads;
-    document.getElementById("m-units").textContent = (Math.round(c.units*10)/10);
+
+    // その場の人数
+    var host = document.getElementById("counts");
+    host.textContent = "";
+    GROUPS.forEach(function(g){
+      var nk = g.key === "full" ? "nFull" : (g.key === "sixty" ? "nSixty" : "nFree");
+      stepper(host, g.label, g.sub,
+        function(){ return Math.max(0, Number(state.billing[nk]) || 0); },
+        function(v){ setCount(nk, v); });
+    });
+
+    // 金額
+    document.getElementById("per-full").textContent  = c.units > 0 ? yen(c.aF) : "—";
+    document.getElementById("per-sixty").textContent = c.units > 0 ? yen(c.aS) : "—";
+    document.getElementById("m-total").textContent   = yen(c.total);
+    document.getElementById("m-heads").textContent   = c.heads;
     document.getElementById("m-collect").textContent = yen(c.collect);
     var gap = document.getElementById("m-gap");
     gap.textContent = (c.gap >= 0 ? "+" : "−") + yen(Math.abs(c.gap)).slice(1) + "円";
     gap.className = c.gap >= 0 ? "gap-pos" : "gap-neg";
-    document.getElementById("m-gapwrap").firstChild.textContent = c.gap >= 0 ? "余り（幹事プール） " : "不足（幹事負担） ";
+    document.getElementById("m-gapwrap").firstChild.textContent =
+      c.gap >= 0 ? "余り（幹事プール） " : "不足（幹事負担） ";
 
-    document.getElementById("s-ichi").innerHTML = c.heads + '<small>名</small>';
-    document.getElementById("s-ni").innerHTML = state.roster.people.filter(function(p){ return p.ni; }).length + '<small>名</small>';
-    document.getElementById("s-each").innerHTML = c.total > 0
-      ? yen(c.each)
-      : '—<small>会計時に表示</small>';
+    document.getElementById("s-heads").innerHTML = c.heads + '<small>名</small>';
+    document.getElementById("s-full").textContent  = c.units > 0 ? yen(c.aF) : "—";
+    document.getElementById("s-sixty").textContent = c.units > 0 ? yen(c.aS) : "—";
 
-    var body = document.getElementById("collectbody");
-    body.textContent = "";
-    var left = 0, leftn = 0, paidSum = 0, leftNames = [];
-    c.rows.forEach(function(r){
-      if(!r.p.paid && r.amount > 0){ left += r.amount; leftn++; leftNames.push(r.p.name); }
-      else if(r.p.paid){ paidSum += r.amount; }
-      if(onlyUnpaid && (r.p.paid || r.amount === 0)) return;
-      var tr = el("tr", r.p.paid ? "paid" : null);
-      tr.appendChild(el("td","nm",r.p.name));
-      tr.appendChild(el("td",null,rateOf(r.p).label));
-      tr.appendChild(el("td","r amt", r.amount === 0 ? "—" : yen(r.amount)));
-      var td = el("td","r");
-      var b = el("button","chip", r.p.paid ? "受領済" : "受領");
-      b.type = "button";
-      b.setAttribute("aria-pressed", r.p.paid ? "true" : "false");
-      b.setAttribute("aria-label", r.p.name + " から受領");
-      b.onclick = function(){ r.p.paid = !r.p.paid; save("roster"); renderMoney(); };
-      td.appendChild(b); tr.appendChild(td); body.appendChild(tr);
-    });
-    if(c.rows.length === 0){
-      var tr0 = el("tr"), td0 = el("td",null,"「参加」タブで参加者を登録し、1次会のトグルをオンにしてください");
-      td0.colSpan = 4; td0.style.color = "var(--ink-3)";
-      tr0.appendChild(td0); body.appendChild(tr0);
-    }
-    document.getElementById("c-left").textContent = yen(left);
-    document.getElementById("c-leftn").textContent = leftn + "名";
+    // 集金
+    var ph = document.getElementById("paidcounts");
+    ph.textContent = "";
+    stepper(ph, "通常から受領", c.nF > 0 ? yen(c.aF) + " × " + c.nF + "名" : "人数が未入力です",
+      function(){ return c.pF; },
+      function(v){ state.billing.pFull = v; save("billing"); renderMoney(); },
+      function(){ return c.nF; });
+    stepper(ph, "6割から受領", c.nS > 0 ? yen(c.aS) + " × " + c.nS + "名" : "人数が未入力です",
+      function(){ return c.pS; },
+      function(v){ state.billing.pSixty = v; save("billing"); renderMoney(); },
+      function(){ return c.nS; });
 
-    // ---- 請求漏れ防止の照合 ----
-    document.getElementById("collectcount").textContent =
-      "集金対象 " + c.rows.filter(function(r){ return r.amount > 0; }).length + "名" +
-      (c.rows.length !== c.heads ? "" : "（1次会参加 " + c.heads + "名のうち招待を除く）");
-
+    // 照合
     var st = document.getElementById("collectstatus");
     st.textContent = "";
-    if(c.rows.length === 0){
+    if(c.collect <= 0){
       st.className = "cstat";
       st.appendChild(el("div","big","—"));
-      st.appendChild(el("div","names","「参加」タブで1次会の参加者を選んでください。"));
+      st.appendChild(el("div","names","総額と人数を入れると、集金の残りが出ます。"));
       return;
     }
-    var billed = c.collect;
-    var ok = (paidSum + left === billed);
-    if(leftn > 0){
+    if(c.leftN > 0){
       st.className = "cstat warn";
-      st.appendChild(el("div","big","未回収 " + leftn + "名 ／ " + yen(left)));
-      var nm = el("div","names");
-      nm.innerHTML = "残り: <b>" + leftNames.join("</b>、<b>") + "</b>";
-      st.appendChild(nm);
+      st.appendChild(el("div","big","未回収 " + c.leftN + "名 ／ " + yen(c.left)));
+      st.appendChild(el("div","names","その場の人数と受け取った人数が合うまで続けてください。"));
     }else{
       st.className = "cstat done";
       st.appendChild(el("div","big","全員から受領済み"));
-      st.appendChild(el("div","names","受領 " + yen(paidSum) + " ／ 伝票 " + yen(c.total) +
+      st.appendChild(el("div","names","受領 " + yen(c.received) + " ／ 伝票 " + yen(c.total) +
         "（" + (c.gap >= 0 ? "余り " : "不足 ") + yen(Math.abs(c.gap)) + "）"));
     }
+    var ok = (c.received + c.left === c.collect);
     var eq = el("div","eq" + (ok ? "" : " bad"));
-    eq.textContent = "受領 " + yen(paidSum) + " ＋ 未回収 " + yen(left) + " ＝ " + yen(paidSum + left) +
-      "（請求合計 " + yen(billed) + "）" + (ok ? " ✓ 一致" : " ← 不一致");
+    eq.textContent = "受領 " + yen(c.received) + " ＋ 未回収 " + yen(c.left) + " ＝ " +
+      yen(c.received + c.left) + "（請求合計 " + yen(c.collect) + "）" + (ok ? " ✓ 一致" : " ← 不一致");
     st.appendChild(eq);
   }
 
@@ -1291,7 +1144,7 @@
     document.getElementById("move-at").value = state.nijikai.moveAt;
     document.getElementById("end-at").value = state.nijikai.endAt;
     var move = toMin(state.nijikai.moveAt), end = toMin(state.nijikai.endAt);
-    var niCount = state.roster.people.filter(function(p){ return p.ni; }).length;
+    var niCount = Math.max(0, Number(state.prep.cntNi) || 0);
     document.getElementById("ni-hint").innerHTML =
       "現在の2次会参加は <b>" + niCount + "名</b>。" + state.nijikai.moveAt + " 移動 → " +
       state.nijikai.endAt + " 解散なら滞在は <b>" + Math.max(0, Math.round((end-move)/6)/10) +
@@ -1585,9 +1438,9 @@
   }
 
   /* ========== タブ ========== */
-  var TABS = [["tab-info","p-info"],["tab-prep","p-prep"],["tab-people","p-people"],["tab-money","p-money"],["tab-venue","p-venue"]];
+  var TABS = [["tab-info","p-info"],["tab-prep","p-prep"],["tab-money","p-money"],["tab-venue","p-venue"]];
   // Artifact版は全タブ。公開ページは概要のみ表示し、合言葉の内側は会計だけ。
-  var STAFF  = IS_ARTIFACT ? [] : ["tab-people","tab-money"];
+  var STAFF  = IS_ARTIFACT ? [] : ["tab-money"];
   var HIDDEN = IS_ARTIFACT ? [] : ["tab-prep","tab-venue"];
   var SKEY = LSKEY + "staff";
   function staffOn(){
@@ -1644,7 +1497,6 @@
     renderCountdowns();
     renderTasks();
     renderYoyaku();
-    renderRoster();
     renderMoney();
     renderVenues();
     showUpdated();
