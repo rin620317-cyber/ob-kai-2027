@@ -343,6 +343,40 @@
   table.collect tr.paid td.nm{text-decoration:line-through}
   table.collect tfoot td{font-weight:700;border-bottom:0;padding-top:10px}
 
+  /* ---------- 集金の名簿（この端末だけに保存） ---------- */
+  .rimport{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .rimport .rt{font-size:13px;font-weight:700;margin-bottom:8px}
+  .rimport p{margin:0 0 10px;font-size:12.5px;color:var(--ink-2);line-height:1.8}
+  .rimport textarea{width:100%;box-sizing:border-box;font:inherit;font-size:13px;line-height:1.7;
+        min-height:130px;padding:10px 12px;border:1px solid var(--line-strong);border-radius:10px;
+        background:var(--surface-2);color:var(--ink);resize:vertical}
+  .rbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .rbtns button{appearance:none;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;
+        border-radius:9px;padding:9px 16px;border:1px solid var(--line-strong);
+        background:var(--surface-2);color:var(--ink-2)}
+  .rbtns button.go{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+  .rbtns button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .rlist{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .rrow{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--line)}
+  .rrow:last-child{border-bottom:0}
+  .rrow.on{background:var(--accent-soft)}
+  .rrow .nm{flex:1 1 auto;min-width:0;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rrow.on .nm{color:var(--ink-3);text-decoration:line-through}
+  .rrow .gp{appearance:none;font:inherit;font-size:11px;font-weight:700;cursor:pointer;flex:none;
+        border-radius:999px;padding:4px 10px;border:1px solid var(--line-strong);
+        background:var(--surface-2);color:var(--ink-3);white-space:nowrap}
+  .rrow .gp.g-sixty{border-color:var(--warn);color:var(--warn)}
+  .rrow .gp.g-free{border-style:dashed}
+  .rrow .am{flex:none;font-family:"Roboto Mono",monospace;font-size:13px;font-weight:500;
+        font-variant-numeric:tabular-nums;color:var(--ink-2);min-width:56px;text-align:right}
+  .rrow .ck{flex:none;width:23px;height:23px;margin:0;accent-color:var(--accent);cursor:pointer}
+  .rfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .rfoot input{flex:1 1 130px;min-width:0;font:inherit;font-size:13px;padding:8px 11px;
+        border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)}
+  .rfoot button{appearance:none;font:inherit;font-size:12px;cursor:pointer;border-radius:9px;
+        padding:8px 13px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--ink-2)}
+  .rfoot .sp{flex:1 1 auto}
+
   /* ---------- 集金の照合 ---------- */
   .cstat{border-radius:12px;padding:14px 16px;margin-top:6px;border:1px solid var(--line);background:var(--surface)}
   .cstat.warn{border-color:var(--warn);background:var(--warn-soft)}
@@ -580,7 +614,7 @@
     </div>
 
     <h2 class="sec"><span class="n">02</span>その場の人数</h2>
-    <p class="hint">テーブルにいる人を数えて入れてください。<b>ここの合計と実際の人数が合っていれば請求漏れは起きません。</b></p>
+    <p class="hint" id="countshint">テーブルにいる人を数えて入れてください。<b>ここの合計と実際の人数が合っていれば請求漏れは起きません。</b></p>
     <div class="counts" id="counts"></div>
 
     <h2 class="sec"><span class="n">03</span>ひとりあたり</h2>
@@ -615,7 +649,8 @@
     </div>
 
     <h2 class="sec"><span class="n">04</span>集金</h2>
-    <p class="hint">受け取るたびに＋を押してください。残り人数と残額が出ます。</p>
+    <p class="hint" id="collecthint">受け取るたびに＋を押してください。残り人数と残額が出ます。</p>
+    <div id="rosterbox"></div>
     <div class="counts" id="paidcounts"></div>
     <div id="collectstatus"></div>
   </section>
@@ -790,7 +825,7 @@
 
   var DEFAULTS = {
     billing: {total:null, nFull:0, nSixty:0, nFree:0, pFull:0, pSixty:0,
-              roundUnit:1, roundMode:"up", updatedAt:null},
+              roundUnit:1, roundMode:"near", updatedAt:null},
     nijikai: {moveAt:"15:00", endAt:"17:00", chosen:null, checks:{}, updatedAt:null},
     prep:    {done:{}, callBy:"2026-11-05", roughBy:"2026-12-05", rsvpBy:"2026-12-27", finalBy:"2026-12-28",
               eventAt:"2027-01-03", yoyakuSt:"done", yoyakuN:20,
@@ -871,7 +906,7 @@
   }
   function roundTo(v, unit, mode){
     if(!isFinite(v)) return 0;
-    if(unit <= 1) return Math.round(v);
+    if(!(unit >= 1)) unit = 1;
     if(mode === "down") return Math.floor(v/unit)*unit;
     if(mode === "near") return Math.round(v/unit)*unit;
     return Math.ceil(v/unit)*unit;
@@ -1104,6 +1139,178 @@
     renderMoney();
   }
 
+  /* ========== 集金の名簿 ==========
+     名前はこの端末の localStorage だけに置く。db にも公開ページにも一切送らない。
+     掲載を断った人の名前を公開URLに載せないための線引き。 */
+  var RKEY = "roster";
+  var roster = lsRead(RKEY) || {people:[], updatedAt:null};
+  if(!roster.people) roster.people = [];
+  var rosterRows = null;
+
+  function rosterSave(){
+    roster.updatedAt = new Date().toISOString();
+    lsWrite(RKEY, roster);
+  }
+
+  // 回答シートから貼り付けた文字列を名簿にする。
+  // タブ区切り（スプレッドシートのコピー）とカンマ区切りの両方を受ける。
+  function parseRoster(text){
+    var lines = String(text).split(/\r?\n/);
+    var rows = [];
+    for(var i = 0; i < lines.length; i++){
+      var t = lines[i].replace(/^\s+|\s+$/g, "");
+      if(t) rows.push(t.split(/\t|,/));
+    }
+    if(!rows.length) return [];
+    var off = 0;
+    var head = rows[0].join(" ");
+    if(/姓|氏名|名前|タイムスタンプ|timestamp/i.test(head)){
+      for(var j = 0; j < rows[0].length; j++){
+        if(/^\s*(姓|氏名|名前)\s*$/.test(rows[0][j])){ off = j; break; }
+      }
+      rows = rows.slice(1);
+    }
+    var out = [];
+    rows.forEach(function(c){
+      var cell = function(k){ return (c[k] || "").replace(/^\s+|\s+$/g, ""); };
+      var sei = cell(off);
+      if(!sei) return;
+      var mei = cell(off + 1);
+      var rest = c.slice(off + 1).join(" ");
+      // 3列以上（姓・名・所属）なら姓名をつなぐ。2列なら2列目は所属とみなす。
+      var name = (c.length - off >= 3 && mei && !/部|先生|顧問/.test(mei)) ? sei + " " + mei : sei;
+      var g = "full";
+      if(/女/.test(rest)) g = "sixty";
+      if(/先生|顧問|招待/.test(rest + " " + sei)) g = "free";
+      out.push({n:name, g:g, p:false});
+    });
+    return out;
+  }
+
+  // 名簿があるときは、人数と受領数を名簿から作る（二重入力をなくす）
+  function syncFromRoster(){
+    if(!roster.people.length) return;
+    var b = state.billing, R = roster.people;
+    function n(g, paid){
+      var k = 0;
+      R.forEach(function(x){ if(x.g === g && (!paid || x.p)) k++; });
+      return k;
+    }
+    b.nFull  = n("full");   b.nSixty = n("sixty");  b.nFree = n("free");
+    b.pFull  = n("full", 1); b.pSixty = n("sixty", 1);
+    save("billing");
+  }
+
+  function rosterAmount(x, c){
+    if(x.g === "free")  return 0;
+    if(x.g === "sixty") return c.aS;
+    return c.aF;
+  }
+  var GLABEL = {full:"通常", sixty:"6割", free:"招待"};
+  var GNEXT  = {full:"sixty", sixty:"free", free:"full"};
+
+  function buildRosterList(){
+    var host = document.getElementById("rosterbox");
+    if(!host) return;
+    host.textContent = "";
+    rosterRows = null;
+    if(!roster.people.length){ buildRosterImport(host); return; }
+
+    var list = el("div","rlist");
+    rosterRows = [];
+    roster.people.forEach(function(x){
+      var row = el("div","rrow");
+      var ck = document.createElement("input");
+      ck.type = "checkbox"; ck.className = "ck"; ck.checked = !!x.p;
+      ck.setAttribute("aria-label", x.n + " から受領");
+      var nm = el("div","nm", x.n);
+      var gp = el("button", "gp");
+      gp.type = "button";
+      var am = el("div","am","—");
+      row.appendChild(ck); row.appendChild(nm); row.appendChild(gp); row.appendChild(am);
+      list.appendChild(row);
+      var ref = {row:row, ck:ck, gp:gp, am:am, x:x};
+      rosterRows.push(ref);
+      ck.onchange = function(){
+        x.p = ck.checked;
+        rosterSave(); syncFromRoster(); renderMoney();
+      };
+      gp.onclick = function(){
+        x.g = GNEXT[x.g] || "full";
+        if(x.g === "free") x.p = false;
+        rosterSave(); syncFromRoster(); renderMoney();
+      };
+    });
+    host.appendChild(list);
+
+    var foot = el("div","rfoot");
+    var inp = document.createElement("input");
+    inp.type = "text"; inp.placeholder = "名簿にない人を追加";
+    inp.setAttribute("aria-label", "名簿にない人を追加");
+    var add = el("button", null, "追加");
+    add.type = "button";
+    add.onclick = function(){
+      var v = inp.value.replace(/^\s+|\s+$/g, "");
+      if(!v) return;
+      roster.people.push({n:v, g:"full", p:false});
+      inp.value = "";
+      rosterSave(); syncFromRoster(); buildRosterList(); renderMoney();
+    };
+    inp.onkeydown = function(e){ if(e.key === "Enter"){ e.preventDefault(); add.onclick(); } };
+    var clr = el("button", null, "名簿を消す");
+    clr.type = "button";
+    clr.onclick = function(){
+      if(!window.confirm("この端末の名簿を消します。よろしいですか。")) return;
+      roster.people = [];
+      rosterSave(); buildRosterList(); renderMoney();
+    };
+    foot.appendChild(inp); foot.appendChild(add);
+    foot.appendChild(el("span","sp"));
+    foot.appendChild(clr);
+    host.appendChild(foot);
+  }
+
+  function buildRosterImport(host){
+    var box = el("div","rimport");
+    box.appendChild(el("div","rt","名簿を取り込む"));
+    var p1 = el("p");
+    p1.innerHTML = "回答シートの<b>姓・名・所属の3列</b>を選んでコピーし、下に貼り付けてください。" +
+      "1行に1人、タブでもカンマでも構いません。<b>女子テニス部の方は自動で6割</b>になります。" +
+      "<br>名前はこの端末の中だけに残ります。ページにも他の人にも出ません。";
+    box.appendChild(p1);
+    var ta = document.createElement("textarea");
+    ta.placeholder = "鳴尾\t太\t男子テニス部\n西宮\t花\t女子テニス部";
+    ta.setAttribute("aria-label", "名簿の貼り付け");
+    box.appendChild(ta);
+    var btns = el("div","rbtns");
+    var go = el("button","go","取り込む");
+    go.type = "button";
+    go.onclick = function(){
+      var ppl = parseRoster(ta.value);
+      if(!ppl.length){ window.alert("名前が読み取れませんでした。1行に1人で貼り付けてください。"); return; }
+      roster.people = ppl;
+      rosterSave(); syncFromRoster(); buildRosterList(); renderMoney();
+    };
+    btns.appendChild(go);
+    box.appendChild(btns);
+    host.appendChild(box);
+  }
+
+  function refreshRoster(c){
+    if(!rosterRows) return;
+    rosterRows.forEach(function(r){
+      var x = r.x;
+      r.row.className = "rrow" + (x.p ? " on" : "");
+      r.ck.checked = !!x.p;
+      r.ck.disabled = x.g === "free";
+      r.gp.textContent = GLABEL[x.g] || "通常";
+      r.gp.className = "gp g-" + x.g;
+      r.gp.title = x.n + " の区分を変える";
+      var a = rosterAmount(x, c);
+      r.am.textContent = c.units > 0 ? (x.g === "free" ? "—" : yen(a)) : "—";
+    });
+  }
+
   function renderMoney(){
     buildSteps();
     var c = compute();
@@ -1128,6 +1335,26 @@
     steps.pSixty.minus.disabled = c.pS <= 0;
     steps.pFull.plus.disabled   = c.pF >= c.nF;
     steps.pSixty.plus.disabled  = c.pS >= c.nS;
+
+    // 名簿があるときは、人数の増減も受領のカウンターも名簿に任せる
+    var hasR = roster.people.length > 0;
+    ["nFull","nSixty","nFree"].forEach(function(k){
+      steps[k].plus.disabled = hasR;
+      if(hasR) steps[k].minus.disabled = true;
+    });
+    if(hasR){
+      steps.nFull.sub.textContent  = "男性・そのほか（名簿から）";
+      steps.nSixty.sub.textContent = "女性（名簿から）";
+      steps.nFree.sub.textContent  = "先生（名簿から）";
+    }
+    document.getElementById("paidcounts").hidden = hasR;
+    document.getElementById("countshint").innerHTML = hasR
+      ? "名簿から自動で数えています。<b>この合計と、いまテーブルにいる人数が合っているか確かめてください。</b>"
+      : "テーブルにいる人を数えて入れてください。<b>ここの合計と実際の人数が合っていれば請求漏れは起きません。</b>";
+    document.getElementById("collecthint").textContent = hasR
+      ? "受け取った人をチェックしてください。チェックの付いていない人が未回収です。"
+      : "受け取るたびに＋を押してください。残り人数と残額が出ます。";
+    refreshRoster(c);
 
     document.getElementById("per-full").textContent  = c.units > 0 ? yen(c.aF) : "—";
     document.getElementById("per-sixty").textContent = c.units > 0 ? yen(c.aS) : "—";
@@ -1155,7 +1382,16 @@
     if(c.leftN > 0){
       st.className = "cstat warn";
       st.appendChild(el("div","big","未回収 " + c.leftN + "名 ／ " + yen(c.left)));
-      st.appendChild(el("div","names","その場の人数と受け取った人数が合うまで続けてください。"));
+      var yet = [];
+      roster.people.forEach(function(x){ if(x.g !== "free" && !x.p) yet.push(x.n); });
+      if(yet.length){
+        var nd = el("div","names");
+        nd.appendChild(document.createTextNode("まだいただいていない方："));
+        nd.appendChild(el("b", null, yet.join("、")));
+        st.appendChild(nd);
+      }else{
+        st.appendChild(el("div","names","その場の人数と受け取った人数が合うまで続けてください。"));
+      }
     }else{
       st.className = "cstat done";
       st.appendChild(el("div","big","全員から受領済み"));
@@ -1537,6 +1773,8 @@
     renderCountdowns();
     renderTasks();
     renderYoyaku();
+    syncFromRoster();
+    buildRosterList();
     renderMoney();
     renderVenues();
     showUpdated();
