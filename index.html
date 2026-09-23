@@ -462,7 +462,7 @@
     <dl class="facts">
       <dt>日時</dt><dd>2027年1月3日（日）12:00 〜 18:00</dd>
       <dt>会場</dt><dd>どんがめ 西宮北口店<br>西宮市高松町11-10（阪急 西宮北口駅すぐ）</dd>
-      <dt>受付</dt><dd>お店で「<b>りん で予約のテニス部OB会です</b>」とお伝えください</dd>
+      <dt>受付</dt><dd>お店で「<b>りん で予約のテニス部OB会です</b>」とお伝えください。時間になったら直接お越しください</dd>
       <dt>会費</dt><dd>当日の伝票を人数で割ります。<b>現金を多めに</b>お持ちください</dd>
       <dt>2次会</dt><dd>15:00頃に移るかもしれません（調整中）</dd>
     </dl>
@@ -473,7 +473,6 @@
 
     <h2 class="sec"><span class="n">02</span>当日の流れ</h2>
     <div class="rail">
-      <div class="stop key"><div class="t">11:45</div><div class="l">集合</div></div>
       <div class="stop key"><div class="t">12:00</div><div class="l">スタート</div></div>
       <div class="stop key"><div class="t">14:45</div><div class="l">会計</div></div>
       <div class="stop"><div class="t">15:00</div><div class="l">2次会（未定）</div></div>
@@ -931,7 +930,8 @@
     var txt = (state.prep.yoyakuSt === "none") ? "未予約（席を押さえる）"
             : (booked ? booked + "名で" + labels[state.prep.yoyakuSt] : labels[state.prep.yoyakuSt]);
     if(booked) txt += "／減員・全キャンセルとも事前連絡でOK";
-    document.getElementById("f-yoyaku").textContent = txt;
+    var fy = document.getElementById("f-yoyaku");
+    if(fy) fy.textContent = txt;
 
     // 予約枠に対して、いま見えている人数がどこまで埋まっているか
     var bar = document.getElementById("gapbar");
