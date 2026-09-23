@@ -143,12 +143,23 @@
   .panel{padding-block:22px}
   h2.sec{font-size:17.5px;font-weight:700;letter-spacing:.01em;line-height:1.4;
         display:flex;align-items:center;gap:11px;margin-block:34px 14px;
-        border-top:1px solid var(--line-strong);padding-top:15px}
+        border-top:1px solid var(--line-strong);padding-top:15px;
+        scroll-margin-top:78px}
   .panel > h2.sec:first-of-type{margin-top:20px;border-top:0;padding-top:0}
   h2.sec .n{flex:none;font-family:"Roboto Mono",monospace;font-size:10.5px;font-weight:700;
         letter-spacing:.06em;color:var(--bg);background:var(--accent);
         padding:4px 8px;border-radius:6px}
   .hint{font-size:13px;color:var(--ink-2);margin:0 0 12px;line-height:1.8}
+
+  /* ---------- 目次 ---------- */
+  .toc{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px}
+  .toc a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;
+        font-size:12px;font-weight:500;color:var(--ink-2);background:var(--surface);
+        border:1px solid var(--line);border-radius:999px;padding:5px 11px 5px 5px;white-space:nowrap}
+  .toc a .n{font-family:"Roboto Mono",monospace;font-size:9.5px;font-weight:700;letter-spacing:.04em;
+        color:var(--bg);background:var(--accent);border-radius:5px;padding:3px 5px}
+  .toc a:hover{border-color:var(--ink-3);color:var(--ink)}
+  .toc a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .empty{font-size:13px;color:var(--ink-3);padding:18px 0;text-align:center;border:1px dashed var(--line-strong);border-radius:12px}
 
   /* ---------- 会費の枠 ---------- */
@@ -527,7 +538,7 @@
       <li>遅刻のご連絡も<b>幹事まで</b>。お店へ直接のご連絡はご遠慮ください</li>
     </ul>
 
-    <h2 class="sec"><span class="n">04</span>決まっていること／まだのこと</h2>
+    <h2 class="sec" data-toc="決まっていること"><span class="n">04</span>決まっていること／まだのこと</h2>
     <div class="status2">
       <div class="scol fixed">
         <div class="sh">決まっている</div>
@@ -551,7 +562,7 @@
 
     <div id="roll"></div>
 
-    <h2 class="sec"><span class="n">05</span>これからのご連絡</h2>
+    <h2 class="sec" data-toc="今後の連絡"><span class="n">05</span>これからのご連絡</h2>
     <p class="hint">決まっていないことは、だいたい月に1度のペースでお知らせします。このページも同じタイミングで更新します。</p>
     <dl class="facts">
       <dt>11月上旬</dt><dd>リマインド</dd>
@@ -573,7 +584,7 @@
     <p class="hint">11月の電話は3軒（どんがめ・赤おに家・餃子のかっちゃん）まとめて。聞き漏らすと12月に手が詰まります。</p>
     <div id="tasks"></div>
 
-    <h2 class="sec"><span class="n">03</span>予約と人数のギャップ</h2>
+    <h2 class="sec" data-toc="予約との差"><span class="n">03</span>予約と人数のギャップ</h2>
     <div class="opts" style="margin-top:0;margin-bottom:12px">
       <label>状況
         <select class="mini" id="yoyaku-st">
@@ -1607,6 +1618,37 @@
     flyBall(e.clientX, e.clientY);
   }, true);
 
+  /* ========== 目次 ==========
+     見出しから作る。節が3つ以上あるタブだけに出す。 */
+  var tocDone = false;
+  function buildToc(){
+    if(tocDone) return;
+    tocDone = true;
+    [].slice.call(document.querySelectorAll("section.panel")).forEach(function(panel){
+      var hs = [].slice.call(panel.querySelectorAll("h2.sec"));
+      if(hs.length < 3) return;
+      var nav = el("nav","toc");
+      nav.setAttribute("aria-label", "このタブの目次");
+      hs.forEach(function(h, i){
+        h.id = panel.id + "-s" + (i + 1);
+        var sp = h.querySelector(".n");
+        var last = h.lastChild;
+        var label = h.getAttribute("data-toc") ||
+                    ((last && last.nodeType === 3) ? last.nodeValue : h.textContent);
+        var a = el("a");
+        a.href = "#" + h.id;
+        if(sp) a.appendChild(el("span","n", sp.textContent));
+        a.appendChild(document.createTextNode(label));
+        a.onclick = function(e){
+          e.preventDefault();
+          h.scrollIntoView({behavior:"smooth", block:"start"});
+        };
+        nav.appendChild(a);
+      });
+      panel.insertBefore(nav, panel.firstChild);
+    });
+  }
+
   /* ========== 概要タブの読み物パーツ ========== */
   function renderFormCta(){
     var host = document.getElementById("formtop");
@@ -1748,6 +1790,7 @@
   }
 
   syncSound();
+  buildToc();
   renderRoll();
   renderFormCta();
   renderAll();
