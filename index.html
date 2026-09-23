@@ -208,6 +208,8 @@
   .scol ul b{color:var(--ink)}
   @media (max-width:560px){ .status2{grid-template-columns:1fr} }
 
+  ul.plain{margin:0;padding-left:1.15em;font-size:13.5px;line-height:1.85;color:var(--ink-2)}
+  ul.plain b{color:var(--ink)}
   ol.log{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);margin-left:6px}
   ol.log li{position:relative;padding:0 0 16px 20px}
   ol.log li::before{content:"";position:absolute;left:-6px;top:7px;width:10px;height:10px;
@@ -455,82 +457,61 @@
   <!-- ============ 概要 ============ -->
   <section class="panel" id="p-info" role="tabpanel" aria-labelledby="tab-info">
     <div id="formtop"></div>
+
     <h2 class="sec"><span class="n">01</span>開催概要</h2>
     <dl class="facts">
-      <dt>日時</dt><dd>2027年1月3日（日）12:00スタート ／ 18:00 解散目標</dd>
-      <dt>会場</dt><dd>どんがめ 西宮北口店（西宮市高松町11-10）</dd>
-      <dt>形式</dt><dd>コース・飲み放題なし。すべて単品注文</dd>
-      <dt>2次会</dt><dd>15:00頃の移動を想定（あくまで想定）。店が決まらなければどんがめのまま18:00まで</dd>
-      <dt>会費</dt><dd>当日の伝票を人数で割る方式（「会計」タブで計算）</dd>
-      <dt>予約</dt><dd id="f-yoyaku">—</dd>
+      <dt>日時</dt><dd>2027年1月3日（日）12:00 〜 18:00</dd>
+      <dt>会場</dt><dd>どんがめ 西宮北口店<br>西宮市高松町11-10（阪急 西宮北口駅すぐ）</dd>
+      <dt>受付</dt><dd>お店で「<b>りん で予約のテニス部OB会です</b>」とお伝えください</dd>
+      <dt>会費</dt><dd>当日の伝票を人数で割ります。<b>現金を多めに</b>お持ちください</dd>
+      <dt>2次会</dt><dd>15:00頃に移るかもしれません（調整中）</dd>
     </dl>
-    <p class="hint" style="margin-top:10px">18:00解散にしているのは、翌1月4日（月）から仕事始めの人が多いためです。</p>
-
-    <h2 class="sec"><span class="n">02</span>いまの状況</h2>
-    <p class="hint">途中からグループに入った人は、ここだけ読めば現状が分かります。</p>
-    <div class="status2">
-      <div class="scol fixed">
-        <div class="sh">決まっていること</div>
-        <ul>
-          <li>日時と場所（1/3 12:00・どんがめ 西宮北口店）</li>
-          <li>どんがめに<b>20名で予約済</b></li>
-          <li>18:00 解散を目標にする</li>
-          <li><b>どんがめに飲み放題のプランはない</b>（すべて単品注文）</li>
-          <li><b>どんがめは時間制限なし</b>。2次会が決まらなければそのまま居られる</li>
-          <li>会費は当日の伝票を人数で割る（一律の前払いなし）</li>
-          <li>減員・全キャンセルは事前連絡でOK（店に確認済み）</li>
-        </ul>
-      </div>
-      <div class="scol open">
-        <div class="sh">まだ決まっていないこと</div>
-        <ul>
-          <li>1/3のどんがめの営業時間（11月に確認）</li>
-          <li>ハッピーアワーの1/3実施可否（11月に確認）</li>
-          <li>2次会をやるか、どこでやるか</li>
-          <li>会費の目安額（人数と注文次第）</li>
-          <li>最終参加人数</li>
-        </ul>
-      </div>
+    <div class="links" style="margin-top:10px">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%A9%E3%82%93%E3%81%8C%E3%82%81%20%E8%A5%BF%E5%AE%AE%E5%8C%97%E5%8F%A3" target="_blank" rel="noopener">地図を開く</a>
+      <a href="https://tabelog.com/rstLst/?sk=%E3%81%A9%E3%82%93%E3%81%8C%E3%82%81%20%E8%A5%BF%E5%AE%AE%E5%8C%97%E5%8F%A3" target="_blank" rel="noopener">お店の情報</a>
     </div>
 
-    <h2 class="sec"><span class="n">03</span>当日の流れ</h2>
+    <h2 class="sec"><span class="n">02</span>当日の流れ</h2>
     <div class="rail">
-      <div class="stop key"><div class="t">11:45</div><div class="l">現地集合・席確認</div></div>
-      <div class="stop key"><div class="t">12:00</div><div class="l">1次会スタート</div></div>
-      <div class="stop"><div class="t">14:30</div><div class="l">ラストオーダー確認</div></div>
-      <div class="stop key"><div class="t">14:45</div><div class="l">会計・集金</div></div>
-      <div class="stop key"><div class="t">15:00</div><div class="l">2次会へ移動</div></div>
+      <div class="stop key"><div class="t">11:45</div><div class="l">集合</div></div>
+      <div class="stop key"><div class="t">12:00</div><div class="l">スタート</div></div>
+      <div class="stop key"><div class="t">14:45</div><div class="l">会計</div></div>
+      <div class="stop"><div class="t">15:00</div><div class="l">2次会（未定）</div></div>
       <div class="stop key"><div class="t">18:00</div><div class="l">解散</div></div>
     </div>
 
-    <h2 class="sec"><span class="n">04</span>参加にあたって</h2>
-    <p class="hint"><b>このページと出欠フォームだけで完結します。</b>グループLINEに入っていなくても参加に支障はありません。必要な連絡はこのページに追記していきます。</p>
-    <dl class="facts" style="margin-top:12px">
-      <dt>対象</dt><dd>同学年が中心ですが、前後の代の方も、女子テニス部の方も歓迎です</dd>
-      <dt>集合</dt><dd>11:45にお店の前、または直接お店へ。12:00スタートです</dd>
-      <dt>受付</dt><dd>直接お越しの場合は、お店で<b>「りん で予約のテニス部OB会です」</b>とお伝えください</dd>
-      <dt>持ち物</dt><dd>会費は当日精算です。<b>現金を多めに</b>お持ちください</dd>
-      <dt>遅刻・欠席の連絡</dt><dd><b>幹事までご連絡ください。</b>お店へ直接のご連絡はご遠慮ください（連絡先は案内メッセージに記載しています）</dd>
-      <dt>途中参加・途中退席</dt><dd>問題ありません。フォームの備考欄に書いていただければ席を用意します</dd>
-    </dl>
-    <p class="hint" style="margin-top:12px">迷っている方は、まず出欠フォームで「未定」と回答しておいてください。あとから変更できます。</p>
+    <h2 class="sec"><span class="n">03</span>参加のしかた</h2>
+    <ul class="plain">
+      <li>出欠は上のフォームから。<b>未定のままでOK</b>、あとから変更できます</li>
+      <li>同学年が中心ですが、前後の代の方も女子テニス部の方も歓迎です</li>
+      <li>途中参加・途中退席は問題ありません。フォームの備考欄にひとこと書いてください</li>
+      <li>遅刻・欠席は<b>幹事まで</b>。お店へ直接のご連絡はご遠慮ください</li>
+    </ul>
 
-    <h2 class="sec"><span class="n">05</span>会場</h2>
-    <div class="vcard">
-      <div class="vname">どんがめ 西宮北口店</div>
-      <div class="vmeta">兵庫県西宮市高松町11-10 ／ 阪急 西宮北口駅から徒歩すぐ<br>予約名は <b>りん</b>（テニス部OB会）</div>
-      <div class="links">
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%A9%E3%82%93%E3%81%8C%E3%82%81%20%E8%A5%BF%E5%AE%AE%E5%8C%97%E5%8F%A3" target="_blank" rel="noopener">地図を開く</a>
-        <a href="https://tabelog.com/rstLst/?sk=%E3%81%A9%E3%82%93%E3%81%8C%E3%82%81%20%E8%A5%BF%E5%AE%AE%E5%8C%97%E5%8F%A3" target="_blank" rel="noopener">お店の情報</a>
+    <h2 class="sec"><span class="n">04</span>決まっていること／まだのこと</h2>
+    <div class="status2">
+      <div class="scol fixed">
+        <div class="sh">決まっている</div>
+        <ul>
+          <li>日時と場所</li>
+          <li>20名で予約済</li>
+          <li>18:00 解散</li>
+          <li>飲み放題はなし（すべて単品）</li>
+          <li>会費は当日の割り勘</li>
+        </ul>
+      </div>
+      <div class="scol open">
+        <div class="sh">まだ決まっていない</div>
+        <ul>
+          <li>1/3の営業時間（11月に確認）</li>
+          <li>ハッピーアワーの実施可否</li>
+          <li>2次会をやるか、どこか</li>
+          <li>会費の目安額</li>
+        </ul>
       </div>
     </div>
 
-    <h2 class="sec"><span class="n">06</span>会費の考え方</h2>
-    <p class="hint"><b>どんがめに飲み放題のプランはありません。</b>すべて単品注文で、会費は当日の伝票を参加人数で割ります。前払いの一律会費はありません。</p>
-    <p class="hint">日曜は18時までハッピーアワーで生ビールが209円。1/3も実施されるかは11月に確認しますが、実施されれば15:00までの1次会は丸ごとその時間帯に収まるので、総額はかなり抑えられます。実施されない場合は通常価格になるため、<b>飲んだ量がそのまま会費に跳ね返ります</b>。目安額は当日まで確定しません。</p>
-
-    <h2 class="sec"><span class="n">07</span>更新履歴</h2>
-    <p class="hint">グループに後から入った人は、ここを上から見れば経緯が追えます。</p>
+    <h2 class="sec"><span class="n">05</span>更新履歴</h2>
     <ol class="log" id="log"></ol>
   </section>
 
