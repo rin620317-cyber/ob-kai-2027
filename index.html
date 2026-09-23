@@ -93,7 +93,9 @@
   #gate button{font:inherit;font-weight:700;font-size:14px;padding:10px 18px;border-radius:10px;
         border:0;background:var(--ball);color:#12261F;cursor:pointer}
   #gate .err{color:#F5B7A6;font-size:12.5px;min-height:1.6em;margin-top:12px}
-  body.locked .wrap{display:none}
+  body.locked{overflow:hidden}
+  .nojs{background:var(--warn-soft);border:1px solid var(--warn);border-radius:10px;
+        padding:12px 14px;margin-top:16px;font-size:13px}
 
   /* ---------- hero ---------- */
   .hero{position:relative;margin-inline:-16px;padding:28px 16px 24px;overflow:hidden;
@@ -404,6 +406,9 @@
 </div>
 
 <div class="wrap">
+  <noscript>
+    <div class="nojs">JavaScriptがオフになっています。日時・場所などの情報はこのまま読めますが、出欠の集計や会計の計算は動きません。</div>
+  </noscript>
   <header class="hero">
     <svg class="court" viewBox="0 0 400 260" preserveAspectRatio="none" aria-hidden="true">
       <g fill="none" stroke="#A8C8B8" stroke-opacity=".45" stroke-width="1">
@@ -660,6 +665,15 @@
   "use strict";
 
   /* ========== 合言葉（このページが素の静的HTMLとして置かれている時だけ） ========== */
+  // 何か例外が出ても白画面にしない安全弁
+  window.addEventListener("error", function(){
+    try{
+      document.body.classList.remove("locked");
+      var g = document.getElementById("gate");
+      if(g) g.hidden = true;
+    }catch(e){}
+  });
+
   var PASS = "760";
   var IS_ARTIFACT = !!(window.claude && typeof window.claude.use === "function");
   var GKEY = "obkai2027:gate";
