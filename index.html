@@ -1474,12 +1474,12 @@
 
   /* ========== タブ ========== */
   var TABS = [["tab-info","p-info"],["tab-prep","p-prep"],["tab-money","p-money"],["tab-venue","p-venue"]];
-  // Artifact版は全タブ。公開ページは概要のみ表示し、合言葉の内側は会計だけ。
-  var STAFF  = IS_ARTIFACT ? [] : ["tab-money"];
+  // 見え方の初期状態はどちらも参加者モード（概要のみ）。
+  // 幹事用のタブはボタンで出す。公開ページでは準備とお店は出さない（店の電話番号や内部メモがあるため）。
+  var STAFF  = IS_ARTIFACT ? ["tab-money","tab-prep","tab-venue"] : ["tab-money"];
   var HIDDEN = IS_ARTIFACT ? [] : ["tab-prep","tab-venue"];
   var SKEY = LSKEY + "staff";
   function staffOn(){
-    if(IS_ARTIFACT) return true;                 // Artifact版は幹事しか開けないので常に全部出す
     try{ return localStorage.getItem(SKEY) === "1"; }catch(e){ return false; }
   }
   function applyStaff(){
@@ -1487,16 +1487,19 @@
     HIDDEN.forEach(function(id){ document.getElementById(id).hidden = true; });
     STAFF.forEach(function(id){ document.getElementById(id).hidden = !on; });
     var strip = document.getElementById("strip");
-    if(strip) strip.hidden = !(IS_ARTIFACT || on);
+    if(strip) strip.hidden = !on;
     var ss = document.getElementById("savestate");
-    if(ss) ss.hidden = !(IS_ARTIFACT || on);
+    if(ss) ss.hidden = !on;
     var vis = TABS.filter(function(t){ return !document.getElementById(t[0]).hidden; });
     document.getElementById("tab-info").style.display = vis.length > 1 ? "" : "none";
     var btn = document.getElementById("stafftoggle");
-    btn.hidden = IS_ARTIFACT;
-    btn.textContent = on ? "会計 ON" : "会計（幹事用）";
+    var many = STAFF.length > 1;
+    btn.hidden = false;
+    btn.textContent = on ? (many ? "幹事メニュー ON" : "会計 ON")
+                         : (many ? "幹事メニュー"    : "会計（幹事用）");
     btn.setAttribute("aria-pressed", on ? "true" : "false");
-    btn.title = on ? "会計タブを隠す" : "会計タブを開く（幹事用）";
+    btn.title = on ? "幹事用のタブを隠して参加者の見え方に戻す"
+                   : "幹事用のタブを開く";
     if(!on){
       var cur = TABS.filter(function(t){ return document.getElementById(t[0]).getAttribute("aria-selected") === "true"; })[0];
       if(cur && STAFF.indexOf(cur[0]) >= 0) showTab("tab-info");
