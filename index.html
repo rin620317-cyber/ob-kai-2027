@@ -457,7 +457,7 @@
     <button class="soundtoggle" id="soundtoggle" type="button">打球音</button>
   </nav>
 
-  <div class="strip">
+  <div class="strip" id="strip">
     <div><div class="k">1次会</div><div class="v" id="s-ichi">—</div></div>
     <div><div class="k">2次会</div><div class="v" id="s-ni">—</div></div>
     <div><div class="k">1人あたり</div><div class="v" id="s-each">—</div></div>
@@ -1439,6 +1439,8 @@
     var on = staffOn();
     HIDDEN.forEach(function(id){ document.getElementById(id).hidden = true; });
     STAFF.forEach(function(id){ document.getElementById(id).hidden = !on; });
+    var strip = document.getElementById("strip");
+    if(strip) strip.hidden = !(IS_ARTIFACT || on);
     var vis = TABS.filter(function(t){ return !document.getElementById(t[0]).hidden; });
     document.getElementById("tab-info").style.display = vis.length > 1 ? "" : "none";
     var btn = document.getElementById("stafftoggle");
