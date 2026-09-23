@@ -597,6 +597,7 @@
   <section class="panel" id="p-people" role="tabpanel" aria-labelledby="tab-people" hidden>
     <h2 class="sec"><span class="n">01</span>参加者</h2>
     <p class="hint">左が事前回答（○参加／△未定／×欠席）、右が当日の実参加。<b>1次</b>・<b>2次</b>のトグルがそのまま割り勘の頭数になります。<b>名前はこのページのソースには含まれません</b>——入力した内容だけが保存されます。</p>
+    <div class="note" id="localnote" hidden></div>
     <div class="roster" id="roster"></div>
     <div class="empty" id="roster-empty" hidden>まだ誰も登録されていません。下の欄から追加してください。</div>
     <form class="addrow" id="addform">
@@ -1068,6 +1069,15 @@
 
   /* ========== 参加者 ========== */
   function renderRoster(){
+    var ln = document.getElementById("localnote");
+    if(ln){
+      ln.hidden = IS_ARTIFACT;
+      if(!IS_ARTIFACT && !ln.innerHTML){
+        ln.innerHTML = "<b>この名簿はこの端末にだけ保存されます。</b>" +
+          "他の端末とは共有されません。当日この端末で会計をするなら、" +
+          "あらかじめここに参加者を登録しておいてください。";
+      }
+    }
     var host = document.getElementById("roster");
     host.textContent = "";
     document.getElementById("roster-empty").hidden = state.roster.people.length > 0;
