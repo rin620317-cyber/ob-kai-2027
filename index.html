@@ -169,6 +169,22 @@
   .cd input[type="date"]{font:inherit;font-size:12px;padding:4px 6px;border-radius:7px;
       border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
 
+  /* ---------- 出欠フォーム ---------- */
+  .formwrap{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+  .formwrap iframe{display:block;width:100%;height:78vh;min-height:520px;max-height:900px;border:0;background:var(--surface)}
+  .formfall{font-size:12px;color:var(--ink-2);padding:10px 14px;border-top:1px solid var(--line);background:var(--surface-2)}
+  .formfall a{color:var(--accent)}
+  .formbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--court);color:#EAF2EC;
+        display:flex;align-items:center;gap:12px;
+        padding:10px 16px;padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+        box-shadow:0 -6px 24px -12px rgba(0,0,0,.5)}
+  .formbar .t{font-size:12.5px;line-height:1.5;min-width:0}
+  .formbar .t small{display:block;font-size:11px;color:#A9C3B4}
+  .formbar a{margin-left:auto;background:var(--ball);color:#12261F;font-weight:700;font-size:13.5px;
+        padding:10px 18px;border-radius:10px;text-decoration:none;white-space:nowrap}
+  .formbar a:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  body.hasbar .wrap{padding-bottom:104px}
+
   /* ---------- flying ball ---------- */
   .flyball{position:fixed;z-index:90;width:26px;height:26px;border-radius:50%;pointer-events:none;
         background:radial-gradient(circle at 32% 28%,#E4F78C,#A9C92E 72%);
@@ -423,6 +439,7 @@
 
   <!-- ============ 概要 ============ -->
   <section class="panel" id="p-info" role="tabpanel" aria-labelledby="tab-info">
+    <div id="formtop"></div>
     <h2 class="sec"><span class="n">01</span>開催概要</h2>
     <dl class="facts">
       <dt>日時</dt><dd>2027年1月3日（日）12:00スタート ／ 18:00 解散目標</dd>
@@ -433,7 +450,6 @@
       <dt>予約</dt><dd id="f-yoyaku">—</dd>
     </dl>
     <p class="hint" style="margin-top:10px">18:00解散にしているのは、翌1月4日（月）から仕事始めの人が多いためです。</p>
-    <div id="formcta"></div>
 
     <h2 class="sec"><span class="n">02</span>いまの状況</h2>
     <p class="hint">途中からグループに入った人は、ここだけ読めば現状が分かります。</p>
@@ -472,8 +488,17 @@
       <div class="stop key"><div class="t">18:00</div><div class="l">解散</div></div>
     </div>
 
-    <h2 class="sec"><span class="n">04</span>声掛けの範囲</h2>
-    <p class="hint">同学年が中心。前後の代でもテニス部に関係する仲間なら年齢は問いません。女子テニス部への声掛けも可。<b>心当たりがあれば、そのままグループに呼んでください。</b></p>
+    <h2 class="sec"><span class="n">04</span>参加にあたって</h2>
+    <p class="hint"><b>このページと出欠フォームだけで完結します。</b>グループLINEに入っていなくても参加に支障はありません。必要な連絡はこのページに追記していきます。</p>
+    <dl class="facts" style="margin-top:12px">
+      <dt>対象</dt><dd>同学年が中心ですが、前後の代の方も、女子テニス部の方も歓迎です</dd>
+      <dt>集合</dt><dd>11:45にお店の前、または直接お店へ。12:00スタートです</dd>
+      <dt>行き方</dt><dd>阪急 西宮北口駅から徒歩すぐ（西宮市高松町11-10）</dd>
+      <dt>持ち物</dt><dd>会費は当日精算です。<b>現金を多めに</b>お持ちください</dd>
+      <dt>遅刻・当日の連絡</dt><dd>お店（<a href="tel:+81798635566">0798-63-5566</a>）へ「テニス部OB会の者です」とお伝えください</dd>
+      <dt>途中参加・途中退席</dt><dd>問題ありません。フォームの備考欄に書いていただければ席を用意します</dd>
+    </dl>
+    <p class="hint" style="margin-top:12px">迷っている方は、まず出欠フォームで「未定」と回答しておいてください。あとから変更できます。</p>
 
     <h2 class="sec"><span class="n">05</span>会費の考え方</h2>
     <p class="hint"><b>どんがめに飲み放題のプランはありません。</b>すべて単品注文で、会費は当日の伝票を参加人数で割ります。前払いの一律会費はありません。</p>
@@ -1366,19 +1391,51 @@
       host.appendChild(li);
     });
   }
+  function embedUrl(u){
+    if(u.indexOf("embedded=true") >= 0) return u;
+    return u + (u.indexOf("?") >= 0 ? "&" : "?") + "embedded=true";
+  }
   function renderFormCta(){
-    var host = document.getElementById("formcta");
+    var host = document.getElementById("formtop");
     host.textContent = "";
+    document.body.classList.remove("hasbar");
+    var old = document.getElementById("formbar");
+    if(old) old.remove();
     if(!FORM_URL) return;
-    var box = el("div","cta");
+
+    // 概要タブの冒頭に埋め込み
+    var h = el("h2","sec");
+    h.appendChild(el("span","n","00"));
+    h.appendChild(document.createTextNode("出欠の回答"));
+    h.style.marginTop = "18px";
+    host.appendChild(h);
+    host.appendChild(el("p","hint","1分で終わります。未定のままでも構いません。あとから変更もできます。"));
+    var box = el("div","formwrap");
+    var fr = document.createElement("iframe");
+    fr.src = embedUrl(FORM_URL);
+    fr.title = "出欠フォーム";
+    fr.loading = "lazy";
+    box.appendChild(fr);
+    var fb = el("div","formfall");
+    fb.appendChild(document.createTextNode("フォームが表示されない場合は "));
+    var fa = el("a",null,"こちらから回答");
+    fa.href = FORM_URL; fa.target = "_blank"; fa.rel = "noopener";
+    fb.appendChild(fa);
+    fb.appendChild(document.createTextNode(" してください。"));
+    box.appendChild(fb);
+    host.appendChild(box);
+
+    // 画面下に常時固定のバー
+    var bar = el("div","formbar"); bar.id = "formbar";
     var t = el("div","t");
-    t.appendChild(document.createTextNode("出欠の回答がまだの方へ"));
-    t.appendChild(el("small",null,"1分で終わります。未定のままでも構いません。"));
-    box.appendChild(t);
+    t.appendChild(document.createTextNode("出欠はお済みですか"));
+    t.appendChild(el("small",null,"未定のままでOK。あとから変更できます"));
+    bar.appendChild(t);
     var a = el("a",null,"出欠を回答する");
     a.href = FORM_URL; a.target = "_blank"; a.rel = "noopener";
-    box.appendChild(a);
-    host.appendChild(box);
+    bar.appendChild(a);
+    document.body.appendChild(bar);
+    document.body.classList.add("hasbar");
   }
 
   /* ========== タブ ========== */
